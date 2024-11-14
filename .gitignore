@@ -1,0 +1,25 @@
+# Virtual environments
+env/
+venv/
+ENV/
+.venv/
+.ENV/
+
+# Environment variable files
+*.env
+
+# Compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Logs
+*.log
+
+# IDE directories
+.idea/
+.vscode/
+
+# System files
+.DS_Store
+*.swp
