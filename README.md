@@ -45,6 +45,13 @@ streamlit python app.py
 
 ## Usage
 
+### OpenAI API KEY
+1. Rename the ``.env.example`` file to ``.env``.
+2. Open the ``.env`` file and paste your OpenAI API Key into the file. It should look like this:
+```bash
+OPENAI_API_KEY=your_openai_api_key
+```
+
 ### Upload your PDF
 
 - Send a POST request to http://localhost:5000/upload with the PDF file.
