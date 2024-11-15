@@ -40,7 +40,7 @@ pip install -r requirements.txt
 Run the application using the following command:
 
 ```bash
-streamlit python app.py
+python app.py
 ```
 
 ## Usage
