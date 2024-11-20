@@ -14,6 +14,9 @@ load_dotenv()
 app = Flask(__name__)
 knowledge_base = None
 
+# Initialize global embeddings model
+embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
+
 @app.route('/upload', methods=['POST'])
 def upload_pdf():
     global knowledge_base
@@ -31,7 +34,7 @@ def upload_pdf():
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=100)
     chunks = text_splitter.split_text(text)
 
-    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
+    # Use the pre-initialized embeddings model
     knowledge_base = FAISS.from_texts(chunks, embeddings)
 
     return jsonify({'success': True, 'message': 'PDF processed successfully'})
