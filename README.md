@@ -57,7 +57,7 @@ OPENAI_API_KEY=your_openai_api_key
 - Send a POST request to http://localhost:5000/upload with the PDF file.
 - Use Postman or a similar tool, select "form-data" in the Body, and add a field named pdf with the file type set to "File".
 
-![alt text](assets/image.png)
+![alt text](assets/pdf-upload.png)
 
 ### Ask Questions
 
@@ -69,4 +69,4 @@ OPENAI_API_KEY=your_openai_api_key
   "question": "What is the main topic of the document?"
 }
 ```
-![alt text](image.png)
+![alt text](assets/response.png)
