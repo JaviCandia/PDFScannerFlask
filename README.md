@@ -62,7 +62,7 @@ OPENAI_API_KEY=your_openai_api_key
 ### Ask Questions
 
 - Send a POST request to http://localhost:5000/query with a JSON body containing the question.
-- Example JSON
+- Example JSON:
 
 ```json
 {
