@@ -1,4 +1,4 @@
-# PDF Chat Backend Application
+# Flask | PDF Chat Backend Application
 
 This project is created as a learning exercise, utilizing **LangChain** and **Flask**. The application allows you to upload a PDF file and ask questions about its content, using the OpenAI API to provide responses.
 
@@ -57,6 +57,8 @@ OPENAI_API_KEY=your_openai_api_key
 - Send a POST request to http://localhost:5000/upload with the PDF file.
 - Use Postman or a similar tool, select "form-data" in the Body, and add a field named pdf with the file type set to "File".
 
+![alt text](assets/image.png)
+
 ### Ask Questions
 
 - Send a POST request to http://localhost:5000/query with a JSON body containing the question.
@@ -67,3 +69,4 @@ OPENAI_API_KEY=your_openai_api_key
   "question": "What is the main topic of the document?"
 }
 ```
+![alt text](image.png)
