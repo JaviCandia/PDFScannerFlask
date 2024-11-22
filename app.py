@@ -17,6 +17,12 @@ knowledge_base = None
 # Initialize global embeddings model
 embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
 
+# Preinitialize the LLM
+llm = ChatOpenAI(model_name='gpt-3.5-turbo')
+
+# This chain coordinates the LLM for the specific QA task
+qa_chain = load_qa_chain(llm, chain_type="stuff")
+
 @app.route('/upload', methods=['POST'])
 def upload_pdf():
     global knowledge_base
@@ -49,11 +55,10 @@ def query_pdf():
 
     user_question = request.json.get('question')
     os.environ["OPENAI_API_KEY"] = os.getenv('OPENAI_API_KEY')
-    docs = knowledge_base.similarity_search(user_question, 3)
+    relevant_docs = knowledge_base.similarity_search(user_question, 3)
 
-    llm = ChatOpenAI(model_name='gpt-3.5-turbo')
-    chain = load_qa_chain(llm, chain_type="stuff")
-    answer = chain.run(input_documents=docs, question=user_question)
+    # Generate the answer using the preinitialized QA chain
+    answer = qa_chain.run(input_documents=relevant_docs, question=user_question)
 
     return jsonify({'answer': answer})
 
