@@ -51,4 +51,11 @@ def query_pdf():
     os.environ["OPENAI_API_KEY"] = os.getenv('OPENAI_API_KEY')
     docs = knowledge_base.similarity_search(user_question, 3)
 
-    llm = Chat
+    llm = ChatOpenAI(model_name='gpt-3.5-turbo')
+    chain = load_qa_chain(llm, chain_type="stuff")
+    answer = chain.run(input_documents=docs, question=user_question)
+
+    return jsonify({'answer': answer})
+
+if __name__ == '__main__':
+    app.run(port=5000)
