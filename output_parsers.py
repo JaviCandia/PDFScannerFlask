@@ -6,7 +6,7 @@ class RoleMatch(BaseModel):
     role_name: str = Field(description="Name of the role")
     role_description: str = Field(description="Short summary of the role descirption")
     fit_skills: List[str] = Field(description="Skills from the candidate that fit the role. Empty array if there are no roles")
-    match_score: int = Field(description="Score from 0 to 100 indicating how the candidate fits the role. 0 if no skills related")
+    match_score: int = Field(description="Score from 0 to 100 indicating how the candidate fits the role")
 
     def to_dict(self) -> Dict[str, Any]:
         return {
