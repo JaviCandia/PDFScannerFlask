@@ -62,12 +62,12 @@ def upload_pdf():
                 - Determine the candidate's level based on their overall experience: Junior, Mid or Senior.
 
                 2. **List the Candidate's Main Skills and Experiences**:
-                - Identify and enumerate the 5 primary skills and experiences.
+                - Identify and enumerate the 5 primary skills / technologies.
 
                 3. **Role Match**:
                 - For each role, provide:
                     - The role name.
-                    - A short summary of the role description.
+                    - A short summary of the role description, 3 lines maximum.
                     - Identify a list of relevant skills from candidate's CV that directly fit the role (5 maximum).
                     - If there are no relevant skills, indicate with a single bullet:
                         * There are no skills that fit the job position.

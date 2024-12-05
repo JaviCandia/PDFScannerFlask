@@ -19,7 +19,7 @@ class RoleMatch(BaseModel):
 class FeedbackModel(BaseModel):
     candidate_name: str = Field(description="Name of the candidate")
     # experience_years: int = Field(description="Years of experience of the candidate")
-    candidate_level: str = Field(description="Candidate level: Junior, Mid or Senior")
+    candidate_level: str = Field(description="Candidate level")
     main_skills: List[str] = Field(description="Main skills from the candidate CV")
     role_matches: List[RoleMatch] = Field(description="List of role matches with the candidate")
 
