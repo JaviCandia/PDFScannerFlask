@@ -3,6 +3,7 @@ import json
 from flask import Flask, request, jsonify
 from PyPDF2 import PdfReader
 from dotenv import load_dotenv
+from flask_cors import CORS
 
 from langchain_openai import ChatOpenAI
 from langchain.schema import Document
@@ -14,6 +15,7 @@ from output_parsers import feedback_parser
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app, resources={r"/upload": {"origins": "http://localhost:3000"}})
 
 # Preinitialize the LLM
 llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
@@ -35,10 +37,10 @@ def create_document(pdf):
 
 @app.route("/upload", methods=["POST"])
 def upload_pdf():
-    if "pdf" not in request.files:
+    if "cv" not in request.files:
         return jsonify({"error": "No PDF uploaded"}), 400
 
-    pdf_file = request.files["pdf"]
+    pdf_file = request.files["cv"]
     documents = create_document(pdf_file)
 
     if roles:
