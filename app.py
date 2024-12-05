@@ -69,7 +69,7 @@ def upload_pdf():
                     - Identify a list of relevant skills from candidate's CV that directly fit the role (5 maximum).
                     - If there are no relevant skills, indicate with a single bullet:
                         * There are no skills that fit the job position.
-                    - A match score from 0 to 100 indicating how well the candidate fits the role.
+                    - A match score from 0 to 100 indicating how well the candidate fits the role. 0 If there are no skills that fit.
                     
                 \n{format_instructions}
             """,

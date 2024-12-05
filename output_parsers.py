@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 class RoleMatch(BaseModel):
     rol_name: str = Field(description="Name of the role")
     fit_skills: List[str] = Field(description="Skills from the candidate that fit the role. Empty array if there are no roles")
-    match_score: int = Field(description="Score from 0 to 100 indicating how the candidate fits the role")
+    match_score: int = Field(description="Score from 0 to 100 indicating how the candidate fits the role. 0 if no skills related")
 
     def to_dict(self) -> Dict[str, Any]:
         return {"rol_name": self.rol_name, "fit_skills": self.fit_skills, "match_score": self.match_score}
