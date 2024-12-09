@@ -5,7 +5,8 @@
       "capability": "Frontend",
       "location": "Monterrey",
       "rolName": "Senior Node JS Engineer",
-      "description": "Design and implement highly interactive, scalable web/mobile apps and prototype. Implement and integrate software platforms through the REST API as well as familiarity with NodeJS framework (e.g., Express, Nest). Create high-quality technical documentation and engage in problem-solving. Lead team and perform code-review for peers and juniors."
+      "description": "Design and implement highly interactive, scalable web/mobile apps and prototype. Implement and integrate software platforms through the REST API as well as familiarity with NodeJS framework (e.g., Express, Nest). Create high-quality technical documentation and engage in problem-solving. Lead team and perform code-review for peers and juniors.",
+      "startDate": "01/01/2025"
     },
     {
       "positionId": "5116500",
@@ -13,7 +14,8 @@
       "level": "12-9",
       "capability": "UX/UI",
       "location": "Monterrey",
-      "description": "Accountable for prototype work and other software engineering solutions that create an optimized user experience. Translate design concepts to prototype solutions as quickly and tangibly as possible, with a balanced understanding of technical feasibility implications and design intent. Required skills: zepplin, adobeXD, Wireframe design"
+      "description": "Accountable for prototype work and other software engineering solutions that create an optimized user experience. Translate design concepts to prototype solutions as quickly and tangibly as possible, with a balanced understanding of technical feasibility implications and design intent. Required skills: zepplin, adobeXD, Wireframe design",
+      "startDate": "02/02/2025"
     },
     {
       "positionId": "6137401",
@@ -21,7 +23,8 @@
       "level": "10",
       "capability": "Frontend",
       "location": "Monterrey",
-      "description": "Develop and maintain user interfaces using Angular best practices. Adapt interface for modern internet applications using the latest front-end technologies. Implement integrations with third-party APIs, tools, and services as needed (e.g., power reviews). Work on eCommerce sites (SAP hybris) and payment integrations. Experience working with CMS integration (e.g., Sitecore). Optimize web pages for performance, speed, and SEO. Debug and troubleshoot cross-browser and multi-device compatibility issues. Write, test, and implement code with a focus on performance, scalability, and security. Maintain and improve existing web applications. Collaborate with back-end developers and web designers to improve usability."
+      "description": "Develop and maintain user interfaces using Angular best practices. Adapt interface for modern internet applications using the latest front-end technologies. Implement integrations with third-party APIs, tools, and services as needed (e.g., power reviews). Work on eCommerce sites (SAP hybris) and payment integrations. Experience working with CMS integration (e.g., Sitecore). Optimize web pages for performance, speed, and SEO. Debug and troubleshoot cross-browser and multi-device compatibility issues. Write, test, and implement code with a focus on performance, scalability, and security. Maintain and improve existing web applications. Collaborate with back-end developers and web designers to improve usability.",
+      "startDate": "03/03/2025"
     },
     {
       "positionId": "6738502",
@@ -29,7 +32,8 @@
       "level": "10",
       "capability": "Culinary",
       "location": "Monterrey",
-      "description": "¿Eres un apasionado de la cocina? ¡Esta es tu oportunidad! Buscamos un cocinero/a con experiencia previa en cocina (mínimo 2 años), conocimiento en técnicas de cocina y preparación de alimentos, creatividad y habilidades para trabajar en equipo, y disponibilidad para trabajar en horarios flexibles."
+      "description": "¿Eres un apasionado de la cocina? ¡Esta es tu oportunidad! Buscamos un cocinero/a con experiencia previa en cocina (mínimo 2 años), conocimiento en técnicas de cocina y preparación de alimentos, creatividad y habilidades para trabajar en equipo, y disponibilidad para trabajar en horarios flexibles.",
+      "startDate": "04/04/2025"
     }
   ]
   
