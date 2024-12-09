@@ -1,66 +1,92 @@
 import os
+import json
 from flask import Flask, request, jsonify
 from PyPDF2 import PdfReader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.chains.question_answering import load_qa_chain
-from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_community.vectorstores import FAISS
-from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
+from flask_cors import CORS
+
+from langchain_openai import ChatOpenAI
+from langchain.schema import Document
+from langchain_core.prompts import PromptTemplate
+
+from output_parsers import feedback_parser
 
 # Load environment variables from .env file
 load_dotenv()
 
 app = Flask(__name__)
-knowledge_base = None
-
-# Initialize global embeddings model
-embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
+CORS(app, resources={r"/upload": {"origins": "http://localhost:3000"}})
 
 # Preinitialize the LLM
-llm = ChatOpenAI(model_name='gpt-3.5-turbo')
+llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
 
-# This chain coordinates the LLM for the specific QA task
-qa_chain = load_qa_chain(llm, chain_type="stuff")
+# Load roles from JSON file
+with open("roles-light.json", "r", encoding="utf-8") as file:
+    roles = json.load(file)
 
-@app.route('/upload', methods=['POST'])
+def create_document(pdf):
+    pdf_reader = PdfReader(pdf)
+    text = "".join(page.extract_text() for page in pdf_reader.pages)
+
+    # Filter content: remove blank lines
+    text = "\n".join(line for line in text.split("\n") if line.strip())
+
+    # Create a Document instance with the full text
+    document = Document(page_content=text, metadata={})
+    return [document]
+
+@app.route("/upload", methods=["POST"])
 def upload_pdf():
-    global knowledge_base
-    if 'pdf' not in request.files:
-        return jsonify({'error': 'No PDF uploaded'}), 400
+    if "cv" not in request.files:
+        return jsonify({"error": "No PDF uploaded"}), 400
 
-    pdf_file = request.files['pdf']
-    pdf_reader = PdfReader(pdf_file)
-    text = ""
-    for page in pdf_reader.pages:
-        text += page.extract_text()
+    pdf_file = request.files["cv"]
+    documents = create_document(pdf_file)
 
-    # Filter out blank lines from the text
-    text = "\n".join([line for line in text.split("\n") if line.strip() != ""])
+    if roles:
+        os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
-    # Split text into smaller chunks
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=100)
-    chunks = text_splitter.split_text(text)
+        new_match_prompt = PromptTemplate(
+            input_variables=["documents", "roles"],
+            partial_variables={
+                "format_instructions": feedback_parser.get_format_instructions
+            },
+            template="""
+                Based on the provided CV information: {documents}
+                and the following roles: {roles},
 
-    # Use the pre-initialized embeddings model to create a knowledge base
-    knowledge_base = FAISS.from_texts(chunks, embedding_model)
+                Please perform the following tasks:
 
-    return jsonify({'success': True, 'message': 'PDF processed successfully'})
+                1. **Understand the Candidate CV**
+                - Give me the name of the candidate.
+                - Determine the candidate's level based on their overall experience: Junior, Mid or Senior.
 
-@app.route('/query', methods=['POST'])
-def query_pdf():
-    global knowledge_base
-    if not knowledge_base:
-        return jsonify({'error': 'Knowledge base not initialized'}), 400
+                2. **List the Candidate's Main Skills and Experiences**:
+                - Identify and enumerate the 5 primary skills / technologies.
 
-    user_question = request.json.get('question')
-    os.environ["OPENAI_API_KEY"] = os.getenv('OPENAI_API_KEY')
-    relevant_docs = knowledge_base.similarity_search(user_question, 3)
+                3. *List the companies where the candidate has worked for*
+                - Identify all the companies where the candidate has worked.
 
-    # Generate the answer using the preinitialized QA chain
-    answer = qa_chain.run(input_documents=relevant_docs, question=user_question)
+                4. **Role Match**:
+                - For each role, provide:
+                    - The role name.
+                    - A short summary of the role description, 3 lines maximum.
+                    - Identify a list of relevant skills from candidate's CV that directly fit the role (5 maximum).
+                    - If there are no relevant skills, indicate with a single bullet:
+                        * There are no skills that fit the job position.
+                    - A match score from 0 to 100 indicating how well the candidate fits the role. 0 If there are no skills that fit.
+                    - Start date of the role.
+                    
+                \n{format_instructions}
+            """,
+        )
 
-    return jsonify({'answer': answer})
+        chain = new_match_prompt | llm | feedback_parser
+        res = chain.invoke(input={"documents": documents, "roles": roles})
 
-if __name__ == '__main__':
+        res_dict = res.to_dict()
+
+        return jsonify(res_dict)
+
+if __name__ == "__main__":
     app.run(port=5000)

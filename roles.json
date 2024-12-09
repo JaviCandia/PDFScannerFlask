@@ -1,0 +1,65 @@
+[
+  {
+    "positionId": "5503470",
+    "level": "9-8",
+    "capability": "Frontend",
+    "location": "Monterrey",
+    "rolName": "Senior Node JS Engineer",
+    "description": "Design and implement highly interactive, scalable web/mobile apps and prototype. Implement and integrate software platforms through the REST API as well as familiarity with NodeJS framework (e.g., Express, Nest). Create high-quality technical documentation and engage in problem-solving. Lead team and perform code-review for peers and juniors.",
+    "startDate": "01/01/2025"
+  },
+  {
+    "positionId": "2612528",
+    "rolName": "Application Designer - Angular JS",
+    "level": "11",
+    "capability": "Frontend",
+    "location": "Monterrey",
+    "description": "1. Design UI Solutions using Angular JS - work with architects, business stakeholders, engineering teams and project leadership to understand the requirements for UI projects and come up with optimal design. 2. Code UI Solutions using Angular JS, Java and other relevant UI technologies. 3. Assess current landscape of UI solution and provide recommendations. 4. Participate in meetings with business stakeholders, enterprise architects and data architects to assess business needs and come up with solutions, best practices, frameworks. 5. Work with offshore to get the work done and meet delivery deadlines. Provide status to project leadership on regular basis.",
+    "startDate": "02/02/2025"
+  },
+  {
+    "positionId": "5116500",
+    "rolName": "UX Designer - Monterrey Resource Backfill",
+    "level": "12-9",
+    "capability": "UX/UI",
+    "location": "Monterrey",
+    "description": "Accountable for prototype work and other software engineering solutions that create an optimized user experience. Translate design concepts to prototype solutions as quickly and tangibly as possible, with a balanced understanding of technical feasibility implications and design intent.",
+    "startDate": "03/03/2025"
+  },
+  {
+    "positionId": "5403086",
+    "rolName": "Fullstack Dev",
+    "level": "9-10",
+    "capability": "Frontend",
+    "location": "Monterrey",
+    "description": "Design and develop efficient software solutions. Your day-to-day activities will involve writing clean and maintainable code, collaborating with cross-functional teams to develop new features, and ensuring seamless integration with other IT components. You should have advanced proficiency in React.js and Python Software Development, and beginner proficiency in Python Django. Design and develop software solutions using React.js and Python Software Development. Collaborate with cross-functional teams to develop new features and ensure seamless integration. Write clean and maintainable code to optimize software performance. Conduct rigorous testing and troubleshooting to identify and resolve software issues. Provide technical guidance and support to project teams throughout the development lifecycle.",
+    "startDate": "04/04/2025"
+  },
+  {
+    "positionId": "5462862",
+    "rolName": "Project Lead",
+    "level": "9-10",
+    "capability": "Frontend",
+    "location": "Monterrey",
+    "description": "Client & Project: We are seeking for a new talent to join the 52971395 where you will have the opportunity to collaborate in the '9940465703 - Op Model - P&E IT' project. Responsibilities: As an Application Developer, you will be responsible for designing, building, and configuring applications to meet business process and application requirements. You will be expected to be a subject matter expert (SME), collaborate and manage the team to perform, and make team decisions. Additionally, you will engage with multiple teams and contribute to key decisions, as well as provide solutions to problems for your immediate team and across multiple teams. Expert proficiency in Java, Spring Boot Microservices (RESTful Web Services is required). Intermediate proficiency in Linux/Unix Desktop Management and Unix Shell Scripting are recommended. Knowledge of DevOps tools - Jenkins, GitHub, Nexus and Pivotal Cloud Foundry is good-to-have as its extensively used in the Client environment. In addition to Java Full stack development, resources are required to have experience in Front end development using Angular / Javascript.",
+    "startDate": "05/05/2025"
+  },
+  {
+    "positionId": "6137401",
+    "rolName": "Angular Developer",
+    "level": "10",
+    "capability": "Frontend",
+    "location": "Monterrey",
+    "description": "Develop and maintain user interfaces using Angular best practices. Adapt interface for modern internet applications using the latest front-end technologies. Implement integrations with third-party APIs, tools, and services as needed (e.g., power reviews). Work on eCommerce sites (SAP hybris) and payment integrations. Experience working with CMS integration (e.g., Sitecore). Optimize web pages for performance, speed, and SEO. Debug and troubleshoot cross-browser and multi-device compatibility issues. Write, test, and implement code with a focus on performance, scalability, and security. Maintain and improve existing web applications. Collaborate with back-end developers and web designers to improve usability.",
+    "startDate": "06/06/2025"
+  },
+  {
+    "positionId": "6738502",
+    "rolName": "Cocinero/a",
+    "level": "10",
+    "capability": "Culinary",
+    "location": "Monterrey",
+    "description": "¿Eres un apasionado de la cocina? ¡Esta es tu oportunidad! Buscamos un cocinero/a con experiencia previa en cocina (mínimo 2 años), conocimiento en técnicas de cocina y preparación de alimentos, creatividad y habilidades para trabajar en equipo, y disponibilidad para trabajar en horarios flexibles.",
+    "startDate": "07/07/2025"
+  }
+]
