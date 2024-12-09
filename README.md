@@ -52,21 +52,10 @@ python app.py
 OPENAI_API_KEY=your_openai_api_key
 ```
 
-### Upload your PDF
-
-- Send a POST request to http://localhost:5000/upload with the PDF file.
-- Use Postman or a similar tool, select "form-data" in the Body, and add a field named pdf with the file type set to "File".
+### Scan your PDF using Postman or a similar tool
+1. Select a POST request to http://localhost:5000/upload.
+2. Click on the Body tab.
+3. Select "form-data" and add a field named "cv" with the file.
+4. Click on "Send" and let it happen!
 
 ![alt text](assets/pdf-upload.png)
-
-### Ask Questions
-
-- Send a POST request to http://localhost:5000/query with a JSON body containing the question.
-- Example JSON:
-
-```json
-{
-  "question": "What is the main topic of the document?"
-}
-```
-![alt text](assets/response.png)
