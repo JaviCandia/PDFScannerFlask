@@ -13,29 +13,15 @@ git clone https://github.com/your_username/your_repository_name.git
 cd your_repository_name
 ```
 
-### Step 2: Create and activate the Virtual Environment
+### Step 2: Install dependencies and activate the virtual environment with Pipenv
 
-Create the virtual environment
-
-```bash
-python -m venv venv
-```
-
-Activate the virtual environment
 
 ```bash
-venv\Scripts\activate
+pipenv install
+pipenv shell
 ```
 
-### Step 3: Install Requirements
-
-Install all the dependencies listed in requirements.txt:
-
-```bash
-pip install -r requirements.txt
-```
-
-### Step 4: Run the application
+### Step 3: Run the application
 
 Run the application using the following command:
 
