@@ -40,14 +40,20 @@ Install Redis using Homebrew
 brew install redis
 ```
 
-### Step 4: Install dependencies and activate the virtual environment with Pipenv
+### Step 4: Install Pipenv Globally
+
+```bash
+pip install pipenv
+```
+
+### Step 5: Install dependencies and activate the virtual environment with Pipenv
 
 ```bash
 pipenv install
 pipenv shell
 ```
 
-### Step 5: Run the application
+### Step 6: Run the application
 
 Run the application using the following command:
 
