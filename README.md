@@ -80,6 +80,11 @@ Start Server
 redis-server
 ```
 
+Stop Server
+```bash
+redis-cli shutdown
+```
+
 Verify Server
 ```bash
 redis-cli ping
