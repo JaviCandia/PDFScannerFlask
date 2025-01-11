@@ -8,7 +8,13 @@ from app.routes import create_routes
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, resources={r"/upload": {"origins": "http://localhost:3000"}})
+CORS(
+    app,
+    resources={
+        r"/single-cv": {"origins": "http://localhost:3000"},
+        r"/multiple-cvs": {"origins": "http://localhost:3000"},
+    },
+)
 
 # Register routes
 create_routes(app)
