@@ -48,3 +48,5 @@ def create_routes(app):
             results.append(response)
 
         return jsonify(results)
+
+# TODO: Crear un endpoint para actualizar data (no importa que esté cacheado en redis)
