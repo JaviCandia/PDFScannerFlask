@@ -13,7 +13,6 @@ llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
 with open("roles-light.json", "r", encoding="utf-8") as file:
     roles = json.load(file)
 
-
 def generate_vector(text):
     from transformers import BertTokenizer, BertModel
 
@@ -26,14 +25,13 @@ def generate_vector(text):
 
     return vector
 
-
 def cache_or_generate_response(documents, redis_client, index):
     pdf_content_key = "pdf_" + hashlib.md5(documents.page_content.encode()).hexdigest()
     cached_response = redis_client.get(pdf_content_key)
 
     # Return data from redis
     if cached_response:
-        return json.loads(cached_response), True
+        return json.loads(cached_response)
 
     # Return data from OpenAI
     if roles:
@@ -49,23 +47,28 @@ def cache_or_generate_response(documents, redis_client, index):
 
         chain = new_match_prompt | llm | feedback_parser
         res = chain.invoke(input={"documents": documents, "roles": roles})
-
         res_dict = res.to_dict()
 
-        expiration_time = 300  # 1800 = 30 minutes
+        # Store the response in Redis
+        expiration_time = 300  # 1800 = 30 minutes | 300 = 5 minutes (tests)
         redis_client.setex(pdf_content_key, expiration_time, json.dumps(res_dict))
 
         # Vectorize the CV and store in Pinecone along with metadata
         vector = generate_vector(documents.page_content)
-
         metadata = {
-            "candidate_name": res_dict.get("candidate_name"),
-            "candidate_level": res_dict.get("candidate_level"),
-            "main_skills": res_dict.get("main_skills"),
+            "name": res_dict.get("name"),
+            "phone": res_dict.get("phone"),
+            "email": res_dict.get("email"),
+            "state": res_dict.get("state"),
+            "city": res_dict.get("city"),
+            "english_level": res_dict.get("english_level"),
+            "education": res_dict.get("education"),
+            # "years_experience": res_dict.get("years_experience"),
             "companies": res_dict.get("companies"),
+            "level": res_dict.get("level"),
+            "skills": res_dict.get("skills")
         }
-
-        index.upsert([(pdf_content_key, vector, metadata)])
+        index.upsert([(res_dict.get("email"), vector, metadata)])  # Usa el correo como ID
 
         return res_dict
 
