@@ -3,9 +3,9 @@ from langchain_core.output_parsers import PydanticOutputParser
 from pydantic import BaseModel, Field
 
 class RoleMatch(BaseModel):
-    role: str = Field(description="Role")
+    role: str = Field(description="Role Name")
     description: str = Field(description="Role description")
-    relevant_skills: List[str] = Field(description="Relevant skills that fit the role" , default=[])
+    relevant_skills: List[str] = Field(description="Relevant skills that fit the role. Empty array if there are no relevant skills" , default=[])
     start_date: str = Field(description="Role start date")
     score: int = Field(description="Match score")
 
@@ -30,7 +30,7 @@ class FeedbackModel(BaseModel):
     companies: List[str] = Field(description="Companies")
     level: str = Field(description="Candidate level")
     skills: List[str] = Field(description="Primary Skills")
-    roles: List[RoleMatch] = Field(description="Roles")
+    roles: List[RoleMatch] = Field(description="List of relevant roles matching the candidate skills", default=[])
 
     def to_dict(self) -> Dict[str, Any]:
         return {

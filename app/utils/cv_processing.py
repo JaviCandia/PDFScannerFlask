@@ -13,6 +13,7 @@ llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
 with open("roles-light.json", "r", encoding="utf-8") as file:
     roles = json.load(file)
 
+# Convert PDF to Vector
 def generate_vector(text):
     from transformers import BertTokenizer, BertModel
 
@@ -29,11 +30,11 @@ def cache_or_generate_response(documents, redis_client, index):
     pdf_content_key = "pdf_" + hashlib.md5(documents.page_content.encode()).hexdigest()
     cached_response = redis_client.get(pdf_content_key)
 
-    # Return data from redis
+    # Return data from redis (If exists)
     if cached_response:
         return json.loads(cached_response)
 
-    # Return data from OpenAI
+    # Return data from OpenAI (If there is no data in redis)
     if roles:
         os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
@@ -50,7 +51,7 @@ def cache_or_generate_response(documents, redis_client, index):
         res_dict = res.to_dict()
 
         # Store the response in Redis
-        expiration_time = 300  # 1800 = 30 minutes | 300 = 5 minutes (tests)
+        expiration_time = 1800  # 1800 = 30 minutes | 300 = 5 minutes (tests)
         redis_client.setex(pdf_content_key, expiration_time, json.dumps(res_dict))
 
         # Vectorize the CV and store in Pinecone along with metadata
