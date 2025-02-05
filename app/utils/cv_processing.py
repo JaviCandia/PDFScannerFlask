@@ -1,10 +1,10 @@
-import os
 import json
 import hashlib
+import base64
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import PromptTemplate
 from app.utils.feedback_parser import feedback_parser
-from app.utils.templates import MATCH_TEMPLATE  # Importar el template
+from app.utils.templates import MATCH_TEMPLATE
 
 # Preinitialize the LLM
 llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
@@ -12,6 +12,11 @@ llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
 # Load roles from JSON file
 with open("roles-light.json", "r", encoding="utf-8") as file:
     roles = json.load(file)
+
+# Function to encode a string in URL-safe Base64 without padding
+def safe_base64_encode(value):
+    encoded = base64.urlsafe_b64encode(value.encode()).decode().rstrip("=")
+    return encoded
 
 # Convert PDF to Vector
 def generate_vector(text):
@@ -26,18 +31,16 @@ def generate_vector(text):
 
     return vector
 
-def cache_or_generate_response(documents, redis_client, index):
+def cache_or_generate_response(documents, redis_client, search_client):
     pdf_content_key = "pdf_" + hashlib.md5(documents.page_content.encode()).hexdigest()
     cached_response = redis_client.get(pdf_content_key)
 
-    # Return data from redis (If exists)
+    # Return data from redis (if exists)
     if cached_response:
         return json.loads(cached_response)
 
-    # Return data from OpenAI (If there is no data in redis)
+    # If no cached response, generate a new one using OpenAI
     if roles:
-        os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
-
         new_match_prompt = PromptTemplate(
             input_variables=["documents", "roles"],
             partial_variables={
@@ -50,13 +53,15 @@ def cache_or_generate_response(documents, redis_client, index):
         res = chain.invoke(input={"documents": documents, "roles": roles})
         res_dict = res.to_dict()
 
-        # Store the response in Redis
-        expiration_time = 1800  # 1800 = 30 minutes | 300 = 5 minutes (tests)
+        # Store the response in Redis with an expiration time
+        expiration_time = 180  # 1800 = 30 minutes | 300 = 5 minutes (for testing)
         redis_client.setex(pdf_content_key, expiration_time, json.dumps(res_dict))
 
-        # Vectorize the CV and store in Pinecone along with metadata
+        # Vectorize the CV and store in Azure AI Search along with metadata
         vector = generate_vector(documents.page_content)
-        metadata = {
+        document_to_index = {
+            "id": safe_base64_encode(res_dict.get("email")),
+            "pdf_vector": vector,
             "name": res_dict.get("name"),
             "phone": res_dict.get("phone"),
             "email": res_dict.get("email"),
@@ -64,14 +69,14 @@ def cache_or_generate_response(documents, redis_client, index):
             "city": res_dict.get("city"),
             "english_level": res_dict.get("english_level"),
             "education": res_dict.get("education"),
-            # "years_experience": res_dict.get("years_experience"),
             "companies": res_dict.get("companies"),
             "level": res_dict.get("level"),
             "skills": res_dict.get("skills")
         }
-        index.upsert([(res_dict.get("email"), vector, metadata)])  # Usa el correo como ID
+
+        # Upload the document to the Azure index
+        search_client.upload_documents(documents=[document_to_index])
 
         return res_dict
 
-# TODO: CAMBIAR A AZURE
 # TODO: Buscar los chunks, traerlos como contexto (nombre, skills, etc.), mandarle eso al LLM para que te responda en lenguaje humano.
