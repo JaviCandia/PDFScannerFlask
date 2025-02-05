@@ -17,6 +17,7 @@ openai = ">=1.54.4"
 python-dotenv = ">=1.0.1"
 redis = "*"
 pinecone-client = "*"
+azure-search-documents = "*"
 
 [dev-packages]
 

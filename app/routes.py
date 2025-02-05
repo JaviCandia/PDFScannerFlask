@@ -4,7 +4,6 @@ from flask import request, jsonify
 from dotenv import load_dotenv
 from app.utils.pdf_processing import create_document
 from app.utils.cv_processing import cache_or_generate_response
-from pinecone import Pinecone
 
 # Load environment variables from .env file
 load_dotenv()
@@ -16,12 +15,18 @@ redis_client = redis.StrictRedis(
     db=os.getenv('REDIS_DB', 0)
 )
 
-# Initialize Pinecone
-pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
+# Initialize Azure AI Search client
+from azure.search.documents import SearchClient
+from azure.core.credentials import AzureKeyCredential
 
-# Connect to the existing index
-index_name = os.getenv("PINECONE_INDEX_NAME")
-index = pc.Index(index_name)
+azure_search_endpoint = os.getenv("AZURE_SEARCH_ENDPOINT")
+azure_search_api_key = os.getenv("AZURE_SEARCH_API_KEYS")
+azure_search_index_name = os.getenv("AZURE_SEARCH_INDEX_NAMES")
+search_client = SearchClient(
+    endpoint=azure_search_endpoint,
+    index_name=azure_search_index_name,
+    credential=AzureKeyCredential(azure_search_api_key)
+)
 
 def create_routes(app):
     @app.route("/single-cv", methods=["POST"])
@@ -32,7 +37,8 @@ def create_routes(app):
         pdf_file = request.files["cv"]
         documents = create_document(pdf_file)[0]
 
-        response = cache_or_generate_response(documents, redis_client, index)
+        # Pass the search_client to cv_processing
+        response = cache_or_generate_response(documents, redis_client, search_client)
         return jsonify(response)
 
     @app.route("/multiple-cvs", methods=["POST"])
@@ -44,7 +50,7 @@ def create_routes(app):
         results = []
         for pdf_file in cvs_files:
             documents = create_document(pdf_file)[0]
-            response = cache_or_generate_response(documents, redis_client, index)
+            response = cache_or_generate_response(documents, redis_client, search_client)
             results.append(response)
 
         return jsonify(results)
