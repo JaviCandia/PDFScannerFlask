@@ -1,6 +1,7 @@
 import json
 import hashlib
 import base64
+import threading
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import PromptTemplate
 from app.utils.feedback_parser import feedback_parser
@@ -31,6 +32,32 @@ def generate_vector(text):
 
     return vector
 
+# Function to process and upload the document to Azure in a background thread
+def process_and_upload_to_azure(documents, res_dict, search_client):
+    try:
+        # Generate the vector
+        vector = generate_vector(documents.page_content)
+        # Prepare the document to index
+        document_to_index = {
+            "id": safe_base64_encode(res_dict.get("email")),
+            "pdf_vector": vector,
+            "name": res_dict.get("name"),
+            "phone": res_dict.get("phone"),
+            "email": res_dict.get("email"),
+            "state": res_dict.get("state"),
+            "city": res_dict.get("city"),
+            "english_level": res_dict.get("english_level"),
+            "education": res_dict.get("education"),
+            "companies": res_dict.get("companies"),
+            "level": res_dict.get("level"),
+            "skills": res_dict.get("skills")
+        }
+        # Upload the document to the Azure index
+        search_client.upload_documents(documents=[document_to_index])
+    except Exception as e:
+        # Handle errors if necessary
+        print(f"Error uploading to Azure: {e}")
+
 def cache_or_generate_response(documents, redis_client, search_client):
     pdf_content_key = "pdf_" + hashlib.md5(documents.page_content.encode()).hexdigest()
     cached_response = redis_client.get(pdf_content_key)
@@ -49,6 +76,7 @@ def cache_or_generate_response(documents, redis_client, search_client):
             template=MATCH_TEMPLATE,
         )
 
+        # OpenAI Process
         chain = new_match_prompt | llm | feedback_parser
         res = chain.invoke(input={"documents": documents, "roles": roles})
         res_dict = res.to_dict()
@@ -57,26 +85,10 @@ def cache_or_generate_response(documents, redis_client, search_client):
         expiration_time = 180  # 1800 = 30 minutes | 300 = 5 minutes (for testing)
         redis_client.setex(pdf_content_key, expiration_time, json.dumps(res_dict))
 
-        # Vectorize the CV and store in Azure AI Search along with metadata
-        vector = generate_vector(documents.page_content)
-        document_to_index = {
-            "id": safe_base64_encode(res_dict.get("email")),
-            "pdf_vector": vector,
-            "name": res_dict.get("name"),
-            "phone": res_dict.get("phone"),
-            "email": res_dict.get("email"),
-            "state": res_dict.get("state"),
-            "city": res_dict.get("city"),
-            "english_level": res_dict.get("english_level"),
-            "education": res_dict.get("education"),
-            "companies": res_dict.get("companies"),
-            "level": res_dict.get("level"),
-            "skills": res_dict.get("skills")
-        }
+        # Start a thread to process and upload the vector to Azure
+        threading.Thread(target=process_and_upload_to_azure, args=(documents, res_dict, search_client)).start()
 
-        # Upload the document to the Azure index
-        search_client.upload_documents(documents=[document_to_index])
-
-        return res_dict
+        # Return res_dict immediately
+        return res
 
 # TODO: Buscar los chunks, traerlos como contexto (nombre, skills, etc.), mandarle eso al LLM para que te responda en lenguaje humano.
