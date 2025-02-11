@@ -82,13 +82,13 @@ def cache_or_generate_response(documents, redis_client, search_client):
         res_dict = res.to_dict()
 
         # Store the response in Redis with an expiration time
-        expiration_time = 180  # 1800 = 30 minutes | 300 = 5 minutes (for testing)
+        expiration_time = 180  # 1800 = 30 minutes
         redis_client.setex(pdf_content_key, expiration_time, json.dumps(res_dict))
 
         # Start a thread to process and upload the vector to Azure
         threading.Thread(target=process_and_upload_to_azure, args=(documents, res_dict, search_client)).start()
 
         # Return res_dict immediately
-        return res
+        return res_dict
 
 # TODO: Buscar los chunks, traerlos como contexto (nombre, skills, etc.), mandarle eso al LLM para que te responda en lenguaje humano.
