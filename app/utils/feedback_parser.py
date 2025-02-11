@@ -29,8 +29,21 @@ class FeedbackModel(BaseModel):
     # years_experience: int = Field(description="Years of experience")
     companies: List[str] = Field(description="Companies")
     level: str = Field(description="Candidate level")
-    skills: List[str] = Field(description="Primary Skills")
-    roles: List[RoleMatch] = Field(description="List of relevant roles matching the candidate skills", default=[])
+    skills: List[str] = Field(description="All skills")
+    matches: List[RoleMatch] = Field(description="List of relevant roles matching the candidate skills", default=[])
+
+    # [Experimental] General info:
+    main_skills: List[str] = Field(description="Main skills", default=[])
+    certs: List[str] = Field(description="Certificates list", default=[])
+    previous_roles: List[str] = Field(description="Roles/Positions from previous jobs/projects", default=[])
+    resume_type: str = Field(description="Internal or External", default="External")
+    rehire: bool = Field(description="The candidate has been in accenture before?", default=False)
+
+    # [Experimental] Accenture Resume:
+    cl: int = Field(description="Career Level", default=0)
+    current_project: str = Field(description="Current project", default="")
+    roll_on_date: str = Field(description="Roll-On date", default="")
+    roll_off_date: str = Field(description="Roll-Off date", default="")
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -45,7 +58,20 @@ class FeedbackModel(BaseModel):
             "companies": self.companies,
             "level": self.level,
             "skills": self.skills,
-            "roles": [role.to_dict() for role in self.roles],
+            "matches": [role.to_dict() for role in self.matches],
+
+            # [Experimental] General info:
+            "main_skills": self.main_skills,
+            "certs": self.certs,
+            "previous_roles": self.previous_roles,
+            "resume_type": self.resume_type,
+            "rehire": self.rehire,
+
+            # [Experimental] Accenture Resume:
+            "cl": self.cl,
+            "current_project": self.current_project,
+            "roll_on_date": self.roll_on_date,
+            "roll_off_date": self.roll_off_date
         }
 
 feedback_parser = PydanticOutputParser(pydantic_object=FeedbackModel)
