@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 
 class RoleMatch(BaseModel):
     role: str = Field(description="Role Name")
+    roleId: str = Field(description="RoleId")
     description: str = Field(description="Role description")
     relevant_skills: List[str] = Field(description="Relevant skills that fit the role. Empty array if there are no relevant skills" , default=[])
     start_date: str = Field(description="Role start date")
@@ -12,6 +13,7 @@ class RoleMatch(BaseModel):
     def to_dict(self) -> Dict[str, Any]:
         return {
             "role": self.role,
+            "roleId": self.roleId,
             "description": self.description,
             "relevant_skills": self.relevant_skills,
             "start_date": self.start_date,

@@ -33,7 +33,7 @@ MATCH_TEMPLATE = """
 
                 4. For each role, provide:
                     - Role name.
-                    - PositionId
+                    - roleId.
                     - A short summary of the role description (maximum 3 lines).
                     - Identify A list of relevant skills from the candidate's CV that directly fit the role (maximum 3 skills).
                     - Analyze and make sure they are USEFUL skills/technologies that DIRECTLY match the role.
