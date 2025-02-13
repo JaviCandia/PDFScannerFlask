@@ -84,7 +84,7 @@ selected_columns = ["Role #", "Role Title", "Project Client","Role Description",
 
 # Diccionario para cambiar los nombres en el JSON de salida
 column_mapping = {
-   "Role #":"positionId", 
+   "Role #":"roleId", 
     "Role Title":"roleName", 
 "Project Client":"project",
 "Role Description":"description",
