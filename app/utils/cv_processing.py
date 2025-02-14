@@ -11,7 +11,7 @@ from app.utils.templates import MATCH_TEMPLATE
 llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
 
 # Load roles from JSON file
-with open("roles-light.json", "r", encoding="utf-8") as file:
+with open("masked_data.json", "r", encoding="utf-8") as file:
     roles = json.load(file)
 
 # Function to encode a string in URL-safe Base64 without padding
@@ -86,7 +86,7 @@ def cache_or_generate_response(documents, redis_client, search_client):
         redis_client.setex(pdf_content_key, expiration_time, json.dumps(res_dict))
 
         # Start a thread to process and upload the vector to Azure
-        threading.Thread(target=process_and_upload_to_azure, args=(documents, res_dict, search_client)).start()
+        #threading.Thread(target=process_and_upload_to_azure, args=(documents, res_dict, search_client)).start()
 
         # Return res_dict immediately
         return res_dict
