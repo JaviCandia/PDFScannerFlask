@@ -8,28 +8,28 @@ def convert_values(value):
     - If a number is in the Excel date format, it is converted to 'YYYY-MM-DD'.
     - Empty or NaN values are converted to empty strings.
     """
-    if pd.isna(value) or value in ["nan", "NaN", "None"]:  # Manejo de valores NaN
+    if pd.isna(value) or value in ["nan", "NaN", "None"]:  # Handling NaN values
         return ""
 
     try:
-        # Intentar convertir a número
+        # Try to convert to a number
         num = float(value)
 
-        # Si es un número entero, verificar si es una fecha de Excel
+        # If it's an integer, check if it's an Excel date
         if num.is_integer():
-            excel_start_date = pd.Timestamp("1899-12-30")  # Corrección de fechas de Excel
+            excel_start_date = pd.Timestamp("1899-12-30")  # Excel date correction
             converted_date = excel_start_date + pd.to_timedelta(int(num), unit="D")
 
-            # Si la fecha es razonable (posterior a 1900 y antes de 2100), devolverla formateada
+            # If the date is reasonable (after 1900 and before 2100), return it formatted
             if pd.Timestamp("1900-01-01") <= converted_date <= pd.Timestamp("2100-12-31"):
-                return converted_date.strftime("%Y-%m-%d")  # Convertir a formato 'YYYY-MM-DD'
+                return converted_date.strftime("%Y-%m-%d")  # Convert to 'YYYY-MM-DD' format
 
-            return int(num)  # Si no es fecha válida, convertirlo a entero normal
+            return int(num)  # If it's not a valid date, convert it to a normal integer
         
-        return str(value)  # Convertir todo lo demás a string
+        return str(value)  # Convert everything else to a string
     
     except ValueError:
-        return str(value)  # Si no es numérico, devolverlo como string
+        return str(value)  # If it's not numeric, return it as a string
 
 def read_sheet_and_convert(file_path, sheet_name, selected_columns, column_mapping, opportunity_type_value):
     """
@@ -37,33 +37,33 @@ def read_sheet_and_convert(file_path, sheet_name, selected_columns, column_mappi
     properly formats values, and adds the opportunity_type field.
     """
     try:
-        # Leer el archivo XLSB con todos los valores como string
+        # Read the XLSB file with all values as strings
         df = pd.read_excel(file_path, sheet_name=sheet_name, engine='pyxlsb', dtype=str)
 
-        # Verificar si las columnas existen en el archivo
+        # Check if the required columns exist in the file
         missing_columns = [col for col in selected_columns if col not in df.columns]
         if missing_columns:
             raise ValueError(f"Missing columns in sheet {sheet_name}: {missing_columns}")
 
-        # Filtrar DataFrame con las columnas requeridas
+        # Filter DataFrame with the required columns
         filtered_df = df[selected_columns]
 
-        # Renombrar columnas según el diccionario de mapeo
+        # Rename columns according to the mapping dictionary
         filtered_df = filtered_df.rename(columns=column_mapping)
 
-        # Reemplazar NaN con valores vacíos
+        # Replace NaN values with empty strings
         filtered_df = filtered_df.fillna("")
 
-        # 🔥 ELIMINAR FILAS QUE ESTÁN COMPLETAMENTE VACÍAS 🔥
+        # 🔥 REMOVE ROWS THAT ARE COMPLETELY EMPTY 🔥
         filtered_df = filtered_df.replace("", pd.NA).dropna(how="all")
 
-        # Convertir valores correctamente
+        # Convert values properly
         filtered_df = filtered_df.applymap(convert_values)
 
-        # Convertir a JSON
+        # Convert to JSON
         json_data = filtered_df.to_dict(orient='records')
 
-        # Agregar el campo "opportunity_type" con el valor de la hoja
+        # Add the "opportunity_type" field with the sheet value
         for record in json_data:
             record["opportunity_type"] = opportunity_type_value
 
@@ -73,10 +73,10 @@ def read_sheet_and_convert(file_path, sheet_name, selected_columns, column_mappi
         print(f"Error processing sheet {sheet_name}: {e}")
         return []
 
-# Función para leer y procesar el Excel
+# Function to read and process the Excel file
 def excel_xlsb_to_json(file_path, output_json_path):
     try:
-        # Columnas originales en el archivo Excel
+        # Original columns in the Excel file
         selected_columns = [
             "Role #", "Role Title", "Project Client", "Role Description", "Project Industry",
             "Role Fulfillment L4", "Role Location Type", "Role Management Level From",
@@ -84,7 +84,7 @@ def excel_xlsb_to_json(file_path, output_json_path):
             "Role Primary Contact", "Role Start Date", "Role End Date", "Role Primary Skill Category Group"
         ]
 
-        # Diccionario para cambiar los nombres en el JSON de salida
+        # Dictionary to rename columns in the output JSON
         column_mapping = {
             "Role #": "roleId",
             "Role Title": "roleName",
@@ -103,16 +103,16 @@ def excel_xlsb_to_json(file_path, output_json_path):
             "Role Primary Skill Category Group": "capability"
         }
 
-        # Procesar la hoja "Database" con opportunity_type = "Database"
+        # Process the "Database" sheet with opportunity_type = "Database"
         data_database = read_sheet_and_convert(file_path, "Database", selected_columns, column_mapping, "Database")
 
-        # Procesar la hoja "1k" con opportunity_type = "1k"
+        # Process the "1k" sheet with opportunity_type = "1k"
         data_1k = read_sheet_and_convert(file_path, "1k", selected_columns, column_mapping, "1k")
 
-        # Fusionar ambas listas de datos
+        # Merge both data lists
         final_data = data_database + data_1k
 
-        # Guardar el JSON en un archivo
+        # Save the JSON to a file
         with open(output_json_path, 'w', encoding='utf-8') as json_file:
             json.dump(final_data, json_file, indent=4, ensure_ascii=False)
 
@@ -121,9 +121,9 @@ def excel_xlsb_to_json(file_path, output_json_path):
     except Exception as e:
         print(f"Error: {e}")
 
-# Ruta del archivo XLSB
+# Path to the XLSB file
 file_path = "C:\\Users\\julio.c.gomez.valdez\\Downloads\\Demand.xlsb"
 output_json_path = "C:\\Users\\julio.c.gomez.valdez\\Downloads\\output.json"
 
-# Ejecutar la función
+# Run the function
 excel_xlsb_to_json(file_path, output_json_path)
