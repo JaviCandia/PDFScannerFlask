@@ -1,0 +1,82 @@
+[
+    {
+        "certs": [],
+        "city": "Monterrey",
+        "cl": 10,
+        "companies": [
+            "GLOBANT",
+            "ACCENTURE",
+            "SOFTTEK S.A. de CV",
+            "EVIDENCE",
+            "AW Software",
+            "SOCIALHERO, SAPI DE CV"
+        ],
+        "current_project": "Intercom",
+        "education": [
+            "Bachelor of Computer Systems Engineering, Instituto Tecnologico de la Laguna - MARCH 2019"
+        ],
+        "email": "ingramos95@gmail.com",
+        "english_level": "Advanced",
+        "level": "Senior",
+        "main_skills": [],
+        "matches": [
+            {
+                "description": "Advanced Scrum Master - SAFe",
+                "relevant_skills": [
+                    "React",
+                    "JavaScript",
+                    "Agile Methodology"
+                ],
+                "role": "Frontend Developer",
+                "roleId": "5654761",
+                "score": 85,
+                "start_date": "2025-02-24"
+            },
+            {
+                "description": "Client & Project: We are seeking for a new talent ...",
+                "relevant_skills": [
+                    "Node",
+                    "JavaScript",
+                    "REST API"
+                ],
+                "role": "Backend Developer",
+                "roleId": "5598533",
+                "score": 75,
+                "start_date": "2025-03-03"
+            },
+            {
+                "description": "Client & Project: We are seeking for a new talent ...",
+                "relevant_skills": [
+                    "JavaScript",
+                    "React",
+                    "Agile Methodology"
+                ],
+                "role": "User Experience Designer",
+                "roleId": "5598531",
+                "score": 70,
+                "start_date": "2025-02-10"
+            }
+        ],
+        "name": "JESÚS ALDO ARGUMANÍZ RAMOS",
+        "phone": "8711023759",
+        "previous_roles": [
+            "SR Frontend Developer",
+            "Frontend Developer",
+            "Software Developer Engineer in Test",
+            "Fullstack Developer & Team Lead"
+        ],
+        "rehire": false,
+        "resume_type": "External",
+        "roll_off_date": "2024-02-28",
+        "roll_on_date": "2021-04-01",
+        "skills": [
+            "JavaScript",
+            "React",
+            "Node",
+            "REST API"
+        ],
+        "state": "Coahuila",
+        "summary": "Senior Frontend Developer with 5 years of experience in React, JavaScript, and Agile methodologies.",
+        "years_experience": "5 years, 10 months"
+    }
+]

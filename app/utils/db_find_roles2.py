@@ -1,6 +1,6 @@
 import psycopg2
 from sentence_transformers import SentenceTransformer
-from tabulate import tabulate  # 📌 Para mejorar la visualización
+from tabulate import tabulate  #  Para mejorar la visualización :)
 
 # Cargar el modelo local
 model_path = "models/all-mpnet-base-v2"
@@ -39,7 +39,7 @@ resultados = cursor.fetchall()
 
 # Verificar si hay resultados
 if not resultados:
-    print("❌ No se encontraron posiciones de React en la base de datos.")
+    print(" No se encontraron posiciones de React en la base de datos.")
 else:
     # Convertir resultados en una tabla más legible
     headers = ["role_id","Puesto", "Proyecto", "Ubicación", "Descripción", "Habilidad Principal", "Habilidad Secundaria", "Similitud"]
@@ -48,7 +48,7 @@ else:
         for role_id, role_name, project, description, main_skill, secondary_skill, location, similarity in resultados
     ]
 
-    print("\n🔎 **Resultados de búsqueda para posiciones de React:**\n")
+    print("\n **Resultados de búsqueda para posiciones de React:**\n")
     print(tabulate(table_data, headers=headers, tablefmt="fancy_grid"))
 
 # Cerrar conexión
