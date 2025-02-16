@@ -79,6 +79,10 @@ MATCH_TEMPLATE = """
 
 ### **Example Input (Resume Excerpt):**
 
+6. Extract key information from the provided CV and summarize the candidate's experience in the following format:
+- Summary: '[Job Role] with [X] years of experience in [Key Technologies/Skills]'.
+- Ensure that the extracted information is concise, accurate, and reflects the candidate’s primary expertise.
+
 
 
                 \n{format_instructions}

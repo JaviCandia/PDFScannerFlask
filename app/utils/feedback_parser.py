@@ -29,6 +29,7 @@ class FeedbackModel(BaseModel):
     english_level: str = Field(description="English level", default="")
     education: List[str] = Field(default_factory=list)
     years_experience: str = Field(description="Total work experience")
+    summary:str = Field(description="Summary")
     companies: List[str] = Field(description="Companies")
     level: str = Field(description="Candidate level")
     skills: List[str] = Field(description="All skills")
@@ -59,6 +60,7 @@ class FeedbackModel(BaseModel):
             "english_level": self.english_level,
             "education": self.education,
              "years_experience": self.years_experience,
+             "summary": self.summary,
             "companies": self.companies,
             "level": self.level,
             "skills": self.skills,
