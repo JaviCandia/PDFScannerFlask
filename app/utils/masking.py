@@ -1,5 +1,9 @@
 import json
+import os
 import random
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Listas de valores ficticios para enmascarar los datos
 roles =[
@@ -292,8 +296,8 @@ def process_json(input_file, output_file):
         print(f"Error processing JSON file: {e}")
 
 # Ruta de los archivos (cambia las rutas según tu sistema)
-input_json_path = "C:\\Users\\julio.c.gomez.valdez\\Downloads\\output.json"   # Ruta del archivo JSON de entrada
-output_json_path = "C:\\Users\\julio.c.gomez.valdez\\Downloads\\masked_data.json" # Ruta del archivo JSON de salida
+input_json_path = os.getenv("DOWNLOAD_PATH") + "output.json"   # Ruta del archivo JSON de entrada
+output_json_path = "masked_data.json" # Ruta del archivo JSON de salida
 
 # Ejecutar el proceso
 process_json(input_json_path, output_json_path)
