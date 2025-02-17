@@ -46,31 +46,35 @@ brew install redis
 pip install pipenv
 ```
 
-### Step 5: Install dependencies and activate the virtual environment with Pipenv
+### Step 5: Open your proyect to install dependencies and activate the virtual environment with Pipenv
 
 ```bash
-pipenv install
 pipenv shell
-```
-
-### Step 6: Run the application
-
-Run the application using the following command:
-
-```bash
-python app.py
+pipenv install
 ```
 
 ## Usage
 
-### OpenAI API KEY
-1. Rename the ``.env.example`` file to ``.env``.
+### Modify you .env
+1. Clone the ``.env.example`` file and rename the copy to ``.env``.
 2. Open the ``.env`` file and paste your OpenAI API Key into the file. It should look like this:
 ```bash
-OPENAI_API_KEY=your_openai_api_key
-REDIS_HOST=localhost
-REDIS_PORT=6379
+OPENAI_API_KEY=openai-api-key
+REDIS_HOST=localhost 
+REDIS_PORT=6379 
 REDIS_DB=0
+AZURE_SEARCH_ENDPOINT=azure-search-endpoint
+AZURE_SEARCH_API_KEY=azure-api-key
+AZURE_SEARCH_INDEX_NAME=azure-index-name
+DOWNLOAD_PATH="C:\\Users\\user_name\\Downloads\\"
+```
+
+### Run the application
+
+Run this command inside your project (where you ran ``pipenv shell``)
+
+```bash
+python app.py
 ```
 
 ### Manage Redis Server
@@ -78,11 +82,6 @@ REDIS_DB=0
 Start Server
 ```bash
 redis-server
-```
-
-Stop Server
-```bash
-redis-cli shutdown
 ```
 
 Verify Server
@@ -95,10 +94,16 @@ Check Redis Database
 redis-cli scan 0
 ```
 
+Stop Server
+```bash
+redis-cli shutdown
+```
+
 ### Scan your PDF using Postman or a similar tool
-1. Select a POST request to http://localhost:5000/upload.
+1. Create a POST request to http://localhost:5000/multiple-cvs.
 2. Click on the Body tab.
-3. Select "form-data" and add a field named "cv" with the file.
-4. Click on "Send" and let it happen!
+3. Click on "form-data" and add a field named "cvs" 
+4. Select "File" from the dropdown and then "Select Files" to upload your CVs
+5. Click on "Send" and let it happen!
 
 ![alt text](assets/pdf-upload.png)
