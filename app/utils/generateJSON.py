@@ -1,5 +1,9 @@
+import os
 import pandas as pd
 import json
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def convert_values(value):
     """
@@ -122,8 +126,8 @@ def excel_xlsb_to_json(file_path, output_json_path):
         print(f"Error: {e}")
 
 # Path to the XLSB file
-file_path = "C:\\Users\\julio.c.gomez.valdez\\Downloads\\Demand.xlsb"
-output_json_path = "C:\\Users\\julio.c.gomez.valdez\\Downloads\\output.json"
+file_path = os.getenv("DOWNLOAD_PATH") + "Demand.xlsb"
+output_json_path = os.getenv("DOWNLOAD_PATH") + "output.json"
 
 # Run the function
 excel_xlsb_to_json(file_path, output_json_path)
