@@ -6,8 +6,8 @@ import json
 from dotenv import load_dotenv
 from app.utils.pdf_processing import create_document
 from app.utils.cv_processing import cache_or_generate_response
-from app.utils.generateJSON import convert_values, read_sheet_and_convert, selected_columns, column_mapping
-from app.utils.masking import mask_data
+from app.utils.generateJSON_util import convert_values, read_sheet_and_convert, selected_columns, column_mapping
+from app.utils.masking_util import mask_data
 
 # Load environment variables from .env file
 load_dotenv()
