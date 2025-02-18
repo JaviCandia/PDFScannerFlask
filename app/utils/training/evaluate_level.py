@@ -19,7 +19,7 @@ reference_levels = {
 reference_embeddings = {level: model.encode(desc) for level, desc in reference_levels.items()}
 
 #  Descripción del candidato a evaluar
-test_description = "Senior Backend Developer with 8 years of experience in cloud computing and Kubernetes."
+test_description = "Senior Backend Developer with 8 years of experience in React."
 
 #  Generar embedding de la consulta
 test_embedding = model.encode(test_description)

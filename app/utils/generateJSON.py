@@ -76,7 +76,8 @@ def excel_xlsb_to_json(file_path, output_json_path):
             "Role #", "Role Title", "Project Client", "Role Description", "Project Industry",
             "Role Fulfillment L4", "Role Location Type", "Role Management Level From",
             "Role Management Level To", "Role Primary Skill", "Role Skills",
-            "Role Primary Contact", "Role Start Date", "Role End Date", "Role Primary Skill Category Group"
+            "Role Primary Contact", "Role Start Date", "Role End Date", "Role Primary Skill Category Group",
+            "Role Type", "Role Status", "Role Create Date"
         ]
 
         # Dictionary to rename columns in the output JSON
@@ -95,7 +96,10 @@ def excel_xlsb_to_json(file_path, output_json_path):
             "Role Primary Contact": "contact",
             "Role Start Date": "startDate",
             "Role End Date": "endDate",
-            "Role Primary Skill Category Group": "capability"
+            "Role Primary Skill Category Group": "capability",
+            "Role Type":"roleType", 
+            "Role Status":"roleStatus", 
+            "Role Create Date":"roleCreateDate"
         }
 
         unique_roles = {}  # Dictionary to ensure unique roleId values
@@ -104,7 +108,7 @@ def excel_xlsb_to_json(file_path, output_json_path):
         read_sheet_and_convert(file_path, "Database", selected_columns, column_mapping, "Database", unique_roles)
 
         # Process the "1k" sheet with opportunity_type = "1k"
-        read_sheet_and_convert(file_path, "1k", selected_columns, column_mapping, "1k", unique_roles)
+        #read_sheet_and_convert(file_path, "1k", selected_columns, column_mapping, "1k", unique_roles)
 
         # Convert dictionary values to a list for JSON output
         final_data = list(unique_roles.values())

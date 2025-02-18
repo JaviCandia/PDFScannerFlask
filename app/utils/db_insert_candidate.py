@@ -1,6 +1,5 @@
 import os
 import psycopg2
-import json
 from sentence_transformers import SentenceTransformer
 from dotenv import load_dotenv
 
@@ -17,8 +16,8 @@ DB_PORT = os.getenv("DB_PORT")
 model_path = "models/all-mpnet-base-v2"
 model = SentenceTransformer(model_path)
 
-# Connect to PostgreSQL
 def get_db_connection():
+    """Establece una conexión con la base de datos."""
     try:
         conn = psycopg2.connect(
             dbname=DB_NAME,
@@ -32,12 +31,10 @@ def get_db_connection():
         print(f" Error connecting to the database: {e}")
         return None
 
-# Load candidate data from JSON
-with open("app/utils/candidates.json", "r", encoding="utf-8") as file:
-    candidates = json.load(file)
+def insert_candidates_to_db(candidates):
+    """ Inserta o actualiza candidatos en la base de datos """
 
-# Insert or update candidates in the candidate table
-def insert_candidates():
+
     conn = get_db_connection()
     if not conn:
         return
@@ -48,63 +45,66 @@ def insert_candidates():
     INSERT INTO candidate (
         name, phone, email, state, city, english_level, education, years_experience, summary,
         companies, level, skills, main_skills, certs, previous_roles, resume_type,
-        rehire, cl, current_project, roll_on_date, roll_off_date, embedding
-    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        rehire, cl, current_project, roll_on_date, roll_off_date, candidate_type, recruiter, capability, status, embedding
+    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     ON CONFLICT (email) DO UPDATE 
     SET 
-        summary = EXCLUDED.summary,
+        name = EXCLUDED.name,
+        phone = EXCLUDED.phone,
+        state = EXCLUDED.state,
+        city = EXCLUDED.city,
+        english_level = EXCLUDED.english_level,
+        education = EXCLUDED.education,
         years_experience = EXCLUDED.years_experience,
+        summary = EXCLUDED.summary,
+        companies = EXCLUDED.companies,
+        level = EXCLUDED.level,
         skills = EXCLUDED.skills,
         main_skills = EXCLUDED.main_skills,
         certs = EXCLUDED.certs,
         previous_roles = EXCLUDED.previous_roles,
+        resume_type = EXCLUDED.resume_type,
+        rehire = EXCLUDED.rehire,
+        cl = EXCLUDED.cl,
+        current_project = EXCLUDED.current_project,
+        roll_on_date = EXCLUDED.roll_on_date,
+        roll_off_date = EXCLUDED.roll_off_date,
+        candidate_type = EXCLUDED.candidate_type,
+        recruiter = EXCLUDED.recruiter,
+        capability = EXCLUDED.capability,
+        status = EXCLUDED.status,
         embedding = EXCLUDED.embedding;
     """
 
+    if not isinstance(candidates, list):  # Validar que sea una lista
+        print("⚠️ Warning: 'candidates' no es una lista. No se insertarán datos.")
+        return
+
     for candidate in candidates:
-        # Generate embedding based on summary and skills
-        skills_text = ", ".join(candidate["skills"]) if candidate["skills"] else "No skills provided"
-        text_to_embed = f"{candidate['summary']} Skills: {skills_text}"
-        embedding = model.encode(text_to_embed).tolist()
+        try:
+            # Generate embedding based on summary and skills
+            skills_text = ", ".join(candidate.get("skills", [])) if candidate.get("skills") else "No skills provided"
+            text_to_embed = f"{candidate.get('summary', '')} Skills: {skills_text}"
+            embedding = model.encode(text_to_embed).tolist()
 
-        # Generate Reference Embeddings for Skills in PostgreSQL
-        embedding_str = "[" + ", ".join(map(str, embedding)) + "]"
+            cursor.execute(query_insert_candidate, (
+                candidate.get("name"), candidate.get("phone"), candidate.get("email"), candidate.get("state"), candidate.get("city"),
+                candidate.get("english_level"), candidate.get("education"), candidate.get("years_experience"), candidate.get("summary"),
+                candidate.get("companies"), candidate.get("level"), candidate.get("skills"), candidate.get("main_skills"),
+                candidate.get("certs"), candidate.get("previous_roles"), candidate.get("resume_type"), candidate.get("rehire"),
+                candidate.get("cl"), candidate.get("current_project"), candidate.get("roll_on_date"), candidate.get("roll_off_date"),
+                candidate.get("candidate_type"), candidate.get("recruiter"), candidate.get("capability"), candidate.get("status"), embedding
+            ))
 
-        # Insert candidate into the database
-        cursor.execute(query_insert_candidate, (
-            candidate["name"], candidate["phone"], candidate["email"], candidate["state"], candidate["city"],
-            candidate["english_level"], candidate["education"], candidate["years_experience"], candidate["summary"],
-            candidate["companies"], candidate["level"], candidate["skills"], candidate["main_skills"],
-            candidate["certs"], candidate["previous_roles"], candidate["resume_type"], candidate["rehire"],
-            candidate["cl"], candidate["current_project"], candidate["roll_on_date"], candidate["roll_off_date"],
-            embedding
-        ))
+            print(f"** Candidate {candidate.get('name')} inserted/updated successfully.")
 
-        # Search for similar roles in the roles table
-        query_search_roles = """
-        SELECT role_id, role_name, project, description, main_skill, secondary_skill, location, contact, embedding <=> %s::vector AS similarity, level
-        FROM roles
-        WHERE role_name ILIKE %s OR main_skill ILIKE %s OR secondary_skill ILIKE %s
-        ORDER BY similarity
-        LIMIT 5;
-        """
-
-        # Search for the top 5 most similar roles using embeddings
-        main_skill_filter = "%" + skills_text.split(",")[0] + "%" if skills_text else "%NoSkills%"
-        cursor.execute(query_search_roles, (embedding_str, main_skill_filter, main_skill_filter, main_skill_filter))
-        similar_roles = cursor.fetchall()
-
-        print(f"\n Candidate {candidate['name']},\n summary: {candidate['summary']} \n skills: {candidate['skills']} \n \n inserted and role comparison completed. \n")
-        for role in similar_roles:
-            print(f"  ID: {role[0]}, Role: {role[1]}, Project: {role[2]}, Level: {role[9]}, Similarity: {role[8]:.4f}")
+        except Exception as e:
+            print(f" Error inserting candidate {candidate.get('name')}: {e}")
 
     # Save changes
     conn.commit()
-    print(f" {len(candidates)} candidates inserted/updated successfully.")
+    print(f"** {len(candidates)} candidates inserted/updated successfully.")
 
     # Close connection
     cursor.close()
     conn.close()
-
-# Execute the process
-insert_candidates()

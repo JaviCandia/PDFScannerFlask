@@ -6,6 +6,10 @@ from langchain_openai import ChatOpenAI
 from langchain_core.prompts import PromptTemplate
 from app.utils.feedback_parser import feedback_parser
 from app.utils.templates import MATCH_TEMPLATE
+from app.utils.db_insert_candidate import insert_candidates_to_db
+
+
+
 
 # Preinitialize the LLM
 llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
@@ -33,30 +37,25 @@ def generate_vector(text):
     return vector
 
 # Function to process and upload the document to Azure in a background thread
-def process_and_upload_to_azure(documents, res_dict, search_client):
+def process_and_upload_to_db(documents, res_dict, search_client):
     try:
         # Generate the vector
-        vector = generate_vector(documents.page_content)
+        #vector = generate_vector(documents.page_content)
         # Prepare the document to index
-        document_to_index = {
-            "id": safe_base64_encode(res_dict.get("email")),
-            "pdf_vector": vector,
-            "name": res_dict.get("name"),
-            "phone": res_dict.get("phone"),
-            "email": res_dict.get("email"),
-            "state": res_dict.get("state"),
-            "city": res_dict.get("city"),
-            "english_level": res_dict.get("english_level"),
-            "education": res_dict.get("education"),
-            "companies": res_dict.get("companies"),
-            "level": res_dict.get("level"),
-            "skills": res_dict.get("skills")
-        }
-        # Upload the document to the Azure index
-        search_client.upload_documents(documents=[document_to_index])
+        print(" Procesando documentos y subiendo a la base de datos...")
+        # Asegurar que `res_dict` es una lista
+        if isinstance(res_dict, dict):  # Si es un solo candidato, conviértelo en una lista
+            res_dict = [res_dict]
+
+
+        # Llamar a la función de inserción reutilizable
+        insert_candidates_to_db(res_dict)
+       
+
+        print(" Procesamiento completado.")
     except Exception as e:
         # Handle errors if necessary
-        print(f"Error uploading to Azure: {e}")
+        print(f"Error uploading to db: {e}")
 
 def cache_or_generate_response(documents, redis_client, search_client):
     pdf_content_key = "pdf_" + hashlib.md5(documents.page_content.encode()).hexdigest()
@@ -80,13 +79,15 @@ def cache_or_generate_response(documents, redis_client, search_client):
         chain = new_match_prompt | llm | feedback_parser
         res = chain.invoke(input={"documents": documents, "roles": roles})
         res_dict = res.to_dict()
+    
+        # Start a thread to process and upload the vector to db
+        threading.Thread(target=process_and_upload_to_db, args=(documents, res_dict, search_client)).start()
 
         # Store the response in Redis with an expiration time
         expiration_time = 180  # 1800 = 30 minutes
         redis_client.setex(pdf_content_key, expiration_time, json.dumps(res_dict))
 
-        # Start a thread to process and upload the vector to Azure
-        #threading.Thread(target=process_and_upload_to_azure, args=(documents, res_dict, search_client)).start()
+
 
         # Return res_dict immediately
         return res_dict

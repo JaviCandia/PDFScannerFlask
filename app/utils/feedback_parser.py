@@ -77,7 +77,11 @@ class FeedbackModel(BaseModel):
             "cl": self.cl,
             "current_project": self.current_project,
             "roll_on_date": self.roll_on_date,
-            "roll_off_date": self.roll_off_date
+            "roll_off_date": self.roll_off_date,
+            "candidate_type":"external",
+            "recruiter":"l.esquivel",
+            "capability":"FrontEnd",
+            "status":"active"
         }
 
 feedback_parser = PydanticOutputParser(pydantic_object=FeedbackModel)
