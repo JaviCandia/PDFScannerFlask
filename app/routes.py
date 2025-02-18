@@ -2,13 +2,12 @@ import os
 import redis
 from flask import Flask, request, jsonify, send_file
 from werkzeug.utils import secure_filename
-from io import BytesIO
 import json
 from dotenv import load_dotenv
 from app.utils.pdf_processing import create_document
 from app.utils.cv_processing import cache_or_generate_response
-from app.utils.generateJSON_util import convert_values, read_sheet_and_convert, selected_columns, column_mapping
-from app.utils.masking_util import mask_data
+from app.utils.generateJSON import convert_values, read_sheet_and_convert, selected_columns, column_mapping
+from app.utils.masking import mask_data
 
 # Load environment variables from .env file
 load_dotenv()
@@ -76,6 +75,9 @@ def create_routes(app):
         # Convert to JSON
         json_data = final_data
 
+        # Save output.json to return to front-end using jsonify
+        output_json = jsonify(json_data)
+
         # Mask data and save masked_data.json in the backend root
         masked_data = mask_data(json_data)
         masked_json = json.dumps(masked_data, ensure_ascii=False, indent=4)
@@ -83,5 +85,5 @@ def create_routes(app):
         with open(masked_json_path, 'w', encoding='utf-8') as f:
             f.write(masked_json)
 
-        # Return output.json as response to front-end using jsonify
-        return jsonify(json_data)
+        # Return output.json as response to front-end
+        return output_json
