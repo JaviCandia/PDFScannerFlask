@@ -17,8 +17,7 @@ CREATE DATABASE vector_db
   
   
     
-    
--- Table: public.candidate
+ -- Table: public.candidate
 
 -- DROP TABLE IF EXISTS public.candidate;
 
@@ -47,6 +46,12 @@ CREATE TABLE IF NOT EXISTS public.candidate
     roll_on_date text COLLATE pg_catalog."default",
     roll_off_date text COLLATE pg_catalog."default",
     embedding vector(768),
+    candidate_type text COLLATE pg_catalog."default",
+    recruiter text COLLATE pg_catalog."default",
+    capability text COLLATE pg_catalog."default",
+    created date DEFAULT CURRENT_DATE,
+    last_updated date DEFAULT CURRENT_DATE,
+    status text COLLATE pg_catalog."default",
     CONSTRAINT candidate_pkey PRIMARY KEY (id),
     CONSTRAINT candidate_email_key UNIQUE (email)
 )
@@ -55,14 +60,21 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.candidate
     OWNER to postgres;
-   
-   
-   
-   
-   
-    
-    
--- Table: public.roles
+
+-- Trigger: update_last_updated_trigger
+
+-- DROP TRIGGER IF EXISTS update_last_updated_trigger ON public.candidate;
+
+CREATE OR REPLACE TRIGGER update_last_updated_trigger
+    BEFORE UPDATE 
+    ON public.candidate
+    FOR EACH ROW
+    EXECUTE FUNCTION public.update_last_updated_column();
+
+
+
+
+    -- Table: public.roles
 
 -- DROP TABLE IF EXISTS public.roles;
 
@@ -86,6 +98,11 @@ CREATE TABLE IF NOT EXISTS public.roles
     capability text COLLATE pg_catalog."default",
     opportunity_type text COLLATE pg_catalog."default",
     embedding vector(768),
+    create_date date DEFAULT CURRENT_DATE,
+    last_updated date DEFAULT CURRENT_DATE,
+    roletype text COLLATE pg_catalog."default",
+    rolestatus text COLLATE pg_catalog."default",
+    rolecreatedate date,
     CONSTRAINT roles_pkey PRIMARY KEY (id),
     CONSTRAINT roles_role_id_key UNIQUE (role_id)
 )
@@ -94,3 +111,13 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.roles
     OWNER to postgres;
+
+-- Trigger: update_roles_last_updated_trigger
+
+-- DROP TRIGGER IF EXISTS update_roles_last_updated_trigger ON public.roles;
+
+CREATE OR REPLACE TRIGGER update_roles_last_updated_trigger
+    BEFORE UPDATE 
+    ON public.roles
+    FOR EACH ROW
+    EXECUTE FUNCTION public.update_roles_last_updated();  
