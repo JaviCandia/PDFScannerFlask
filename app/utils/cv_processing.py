@@ -11,7 +11,7 @@ from app.utils.templates import MATCH_TEMPLATE
 llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
 
 # Load roles from JSON file
-with open("masked_data.json", "r", encoding="utf-8") as file:
+with open("roles-light.json", "r", encoding="utf-8") as file: # TODO: Debe ser masked_json
     roles = json.load(file)
 
 # Function to encode a string in URL-safe Base64 without padding

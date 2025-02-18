@@ -1,9 +1,14 @@
 import os
 import redis
-from flask import request, jsonify
+from flask import Flask, request, jsonify, send_file
+from werkzeug.utils import secure_filename
+from io import BytesIO
+import json
 from dotenv import load_dotenv
 from app.utils.pdf_processing import create_document
 from app.utils.cv_processing import cache_or_generate_response
+from app.utils.generateJSON_util import convert_values, read_sheet_and_convert, selected_columns, column_mapping
+from app.utils.masking_util import mask_data
 
 # Load environment variables from .env file
 load_dotenv()
@@ -55,4 +60,28 @@ def create_routes(app):
 
         return jsonify(results)
 
-# TODO: Crear un endpoint para actualizar data (no importa que esté cacheado en redis)
+    @app.route('/process-demand', methods=['POST'])
+    def process_demand():
+        if 'file' not in request.files:
+            return jsonify({'error': 'No file uploaded'}), 400
+        
+        file = request.files['file']
+        filename = secure_filename(file.filename)
+
+        # Read the XLSB file and convert to JSON
+        data_database = read_sheet_and_convert(file, "Database", selected_columns, column_mapping, "Database")
+        data_1k = read_sheet_and_convert(file, "1k", selected_columns, column_mapping, "1k")
+        final_data = data_database + data_1k
+
+        # Convert to JSON
+        json_data = json.dumps(final_data, ensure_ascii=False, indent=4)
+
+        # Mask data
+        masked_data = mask_data(json.loads(json_data))
+        masked_json = json.dumps(masked_data, ensure_ascii=False, indent=4)
+
+        # Prepare the masked data to send as a file
+        masked_json_io = BytesIO(masked_json.encode('utf-8'))
+        masked_json_io.seek(0)
+
+        return send_file(masked_json_io, as_attachment=True, download_name='masked_data.json')
