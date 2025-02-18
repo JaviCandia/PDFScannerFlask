@@ -74,14 +74,14 @@ def create_routes(app):
         final_data = data_database + data_1k
 
         # Convert to JSON
-        json_data = json.dumps(final_data, ensure_ascii=False, indent=4)
+        json_data = final_data
 
-        # Mask data
-        masked_data = mask_data(json.loads(json_data))
+        # Mask data and save masked_data.json in the backend root
+        masked_data = mask_data(json_data)
         masked_json = json.dumps(masked_data, ensure_ascii=False, indent=4)
+        masked_json_path = 'masked_data.json'
+        with open(masked_json_path, 'w', encoding='utf-8') as f:
+            f.write(masked_json)
 
-        # Prepare the masked data to send as a file
-        masked_json_io = BytesIO(masked_json.encode('utf-8'))
-        masked_json_io.seek(0)
-
-        return send_file(masked_json_io, as_attachment=True, download_name='masked_data.json')
+        # Return output.json as response to front-end using jsonify
+        return jsonify(json_data)
