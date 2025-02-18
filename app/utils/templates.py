@@ -83,6 +83,23 @@ MATCH_TEMPLATE = """
 - Summary: '[Job Role] with [X] years of experience in [Key Technologies/Skills]'.
 - Ensure that the extracted information is concise, accurate, and reflects the candidate’s primary expertise.
 
+7. You are an AI assistant specialized in analyzing resumes. Your task is to extract the main technical skills from a PDF resume by identifying the most frequently mentioned skills in projects or job assignments. 
+   Additionally, consider the number of years each skill has been used across different roles to determine the most relevant ones.
+
+### Instructions:
+7.1. **Extract skills**: Identify all technologies, programming languages, frameworks, and tools mentioned in the document.
+7.2. **Calculate frequency**: Count how often each skill appears across different projects or job descriptions.
+7.3. **Consider experience duration**: If the resume specifies years of experience per project, aggregate the total time for each skill.
+7.4. **Prioritize main skills**: Select the top skills based on both frequency and years of experience.
+7.5. **main_skills**: Return a concise list of the most relevant skills in the format:  '[Angular, React, Node.js, ...]'
+
+### Example Output:
+If the resume mentions Angular in 4 different projects spanning 6 years, React in 3 projects for 4 years, and Node.js in 5 projects for 7 years, the output should be:  
+`["Node.js", "Angular", "React"]` (sorted based on relevance).
+
+Process the PDF carefully and provide only the final list of skills.
+
+
 
 
                 \n{format_instructions}
