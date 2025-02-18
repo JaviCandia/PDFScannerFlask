@@ -38,6 +38,10 @@ def create_routes(app):
         if "cv" not in request.files:
             return jsonify({"error": "No PDF uploaded"}), 400
 
+        # Check if masked_data.json exists
+        if not os.path.exists('masked_data.json'):
+            return jsonify({"error": "Roles data not available. Please generate the roles data first."}), 400
+
         pdf_file = request.files["cv"]
         documents = create_document(pdf_file)[0]
 
@@ -49,6 +53,10 @@ def create_routes(app):
     def upload_multiple_cvs():
         if "cvs" not in request.files:
             return jsonify({"error": "No PDFs uploaded"}), 400
+
+        # Check if masked_data.json exists
+        if not os.path.exists('masked_data.json'):
+            return jsonify({"error": "Roles data not available. Please generate the roles data first."}), 400
 
         cvs_files = request.files.getlist("cvs")
         results = []

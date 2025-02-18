@@ -2,6 +2,7 @@ import json
 import hashlib
 import base64
 import threading
+import os
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import PromptTemplate
 from app.utils.feedback_parser import feedback_parser
@@ -10,9 +11,13 @@ from app.utils.templates import MATCH_TEMPLATE
 # Preinitialize the LLM
 llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
 
-# Load roles from JSON file
-with open("roles-light.json", "r", encoding="utf-8") as file: # TODO: Debe ser masked_json
-    roles = json.load(file)
+# Initialize roles as an empty list
+roles = []
+
+# Load roles from JSON file if it exists
+if os.path.exists('masked_data.json'):
+    with open("masked_data.json", "r", encoding="utf-8") as file:
+        roles = json.load(file)
 
 # Function to encode a string in URL-safe Base64 without padding
 def safe_base64_encode(value):
