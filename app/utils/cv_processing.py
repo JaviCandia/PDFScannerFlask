@@ -2,6 +2,7 @@ import json
 import hashlib
 import base64
 import threading
+import os
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import PromptTemplate
 from app.utils.feedback_parser import feedback_parser
@@ -10,9 +11,14 @@ from app.utils.templates import MATCH_TEMPLATE
 # Preinitialize the LLM
 llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
 
-# Load roles from JSON file
-with open("masked_data.json", "r", encoding="utf-8") as file:
-    roles = json.load(file)
+# Initialize roles as an empty list
+roles = []
+
+def load_roles():
+    global roles
+    if os.path.exists('masked_data.json'):
+        with open("masked_data.json", "r", encoding="utf-8") as file:
+            roles = json.load(file)
 
 # Function to encode a string in URL-safe Base64 without padding
 def safe_base64_encode(value):
@@ -66,6 +72,9 @@ def cache_or_generate_response(documents, redis_client, search_client):
     if cached_response:
         return json.loads(cached_response)
 
+    # Load roles from JSON file if it exists
+    load_roles()
+
     # If no cached response, generate a new one using OpenAI
     if roles:
         new_match_prompt = PromptTemplate(
@@ -90,5 +99,7 @@ def cache_or_generate_response(documents, redis_client, search_client):
 
         # Return res_dict immediately
         return res_dict
+    else:
+        return {"error": "Roles data not available. Please generate the roles data first."}
 
 # TODO: Buscar los chunks, traerlos como contexto (nombre, skills, etc.), mandarle eso al LLM para que te responda en lenguaje humano.

@@ -39,7 +39,7 @@ class FeedbackModel(BaseModel):
     main_skills: List[str] = Field(description="Main skills", default=[])
     certs: List[str] = Field(description="Certificates list", default=[])
     previous_roles: List[str] = Field(description="Roles/Positions from previous jobs/projects", default=[])
-    resume_type: str = Field(description="Internal or External", default="External")
+    candidate_type: str = Field(description="Internal or External", default="External")
     rehire: bool = Field(description="The candidate has been in accenture before?", default=False)
 
     # [Experimental] Accenture Resume:
@@ -70,7 +70,7 @@ class FeedbackModel(BaseModel):
             "main_skills": self.main_skills,
             "certs": self.certs,
             "previous_roles": self.previous_roles,
-            "resume_type": self.resume_type,
+            "candidate_type": self.candidate_type,
             "rehire": self.rehire,
 
             # [Experimental] Accenture Resume:
