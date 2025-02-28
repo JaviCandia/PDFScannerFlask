@@ -124,7 +124,7 @@ def excel_xlsb_to_json(file_path, output_json_path):
 
 # File paths
 file_path = "/Users/julio.c.gomez.valdez/Documents/Demanda/Demand.xlsb"
-output_json_path = "/Users/julio.c.gomez.valdez/Documents/Demanda/demand_output.json"
+output_json_path = "/Users/julio.c.gomez.valdez/Documents/CodigoIA/PDFScannerFlask/demand_output.json"
 
 # Run the function
 excel_xlsb_to_json(file_path, output_json_path)

@@ -18,7 +18,6 @@ pinecone-client = "*"
 azure-search-documents = "*"
 pandas = "*"
 pyxlsb = "*"
-psycopg2-binary = "*"
 psycopg2 = "*"
 numpy = "*"
 tabulate = "*"
@@ -28,6 +27,7 @@ fastapi = "*"
 uvicorn = "*"
 sentence-transformers = "*"
 faiss-cpu = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
