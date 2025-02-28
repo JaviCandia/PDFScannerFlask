@@ -1,0 +1,46 @@
+Install PostgreSQL
+Step 1: Download the Installer
+Go to the official PostgreSQL website:
+🔗 https://www.postgresql.org/download/windows/
+
+Postgres.app with PostgreSQL 17 (Universal)
+
+Click on "Download the installer" (provided by EnterpriseDB).
+Step 2: Run the Installer
+Open the downloaded .exe file.
+Click Next to start the installation.
+
+Step 3: Choose Installation Directory
+Select the folder where you want to install PostgreSQL (default: C:\Program Files\PostgreSQL\17).
+Click Next.
+Step 4: Select Components
+Ensure that PostgreSQL Server, pgAdmin 4, Command Line Tools, and Stack Builder are selected.
+Click Next.
+
+Step 5: Set Password for PostgreSQL
+Enter a strong password for the postgres user (superuser).
+Remember this password as it will be needed for database connections.
+
+
+
+###################################
+Install pgAdmin 4
+Step 1: Download pgAdmin
+Visit pgAdmin's official website:
+🔗 https://www.pgadmin.org/download/
+Download the Windows installer.
+Step 2: Install pgAdmin
+Run the downloaded .exe file.
+Follow the installation steps and click Next.
+Choose an installation directory.
+Click Finish.
+Step 3: Open pgAdmin
+Open pgAdmin 4 from the Start Menu.
+It will ask for a Master Password (used to protect stored credentials).
+Click on "Add New Server" → Enter the following details:
+Host: localhost
+Port: 5432
+Username: postgres
+Password: (Enter the password you set during PostgreSQL installation)
+Click Save.
+Now, you can manage PostgreSQL databases using pgAdmin!
