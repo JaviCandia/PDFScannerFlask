@@ -25,3 +25,7 @@ __pycache__/
 *.swp
 dump.rdb
 masked_data.json
+
+#model IA
+**/models/
+models/*
