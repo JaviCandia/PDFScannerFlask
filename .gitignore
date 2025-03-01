@@ -27,5 +27,4 @@ dump.rdb
 masked_data.json
 
 #model IA
-**/models/
-models/*
+models/
