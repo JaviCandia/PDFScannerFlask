@@ -23,3 +23,5 @@ __pycache__/
 # System files
 .DS_Store
 *.swp
+dump.rdb
+masked_data.json
