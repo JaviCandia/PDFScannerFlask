@@ -1,11 +1,11 @@
 import numpy as np
 from sentence_transformers import SentenceTransformer, util
 
-#  Cargar el modelo entrenado
+# Load the trained model
 model_path = "models/all-mpnet-base-v2"
 model = SentenceTransformer(model_path)
 
-#  Ejemplos representativos por nivel (CL12 - CL7)
+# Representative examples by level (CL12 - CL7)
 reference_levels = {
     "CL12": "Junior Developer with 1 year of experience in React and JavaScript.",
     "CL11": "Fullstack Engineer with 3 years of experience in React and Node.js.",
@@ -15,29 +15,29 @@ reference_levels = {
     "CL7": "Engineering Manager with 15 years of experience leading agile teams."
 }
 
-#  Generar embeddings de referencia
+# Generate reference embeddings
 reference_embeddings = {level: model.encode(desc) for level, desc in reference_levels.items()}
 
-#  Descripción del candidato a evaluar
+# Candidate description to evaluate
 test_description = "Senior Backend Developer with 8 years of experience in React."
 
-#  Generar embedding de la consulta
+# Generate query embedding
 test_embedding = model.encode(test_description)
 
-#  Calcular similitudes con cada nivel
+# Calculate similarities with each level
 similarities = {
     level: util.cos_sim(test_embedding, emb).item()
     for level, emb in reference_embeddings.items()
 }
 
-#  Obtener el nivel más similar
+# Get the most similar level
 predicted_level = max(similarities, key=similarities.get)
 
-#  Mostrar resultados
-print("\n Evaluación de Nivel del Candidato:")
-print(f" Descripción: {test_description}")
-print(" Similitudes con cada nivel:")
+# Display results
+print("\nCandidate Level Evaluation:")
+print(f"Description: {test_description}")
+print("Similarities with each level:")
 for level, score in similarities.items():
     print(f"   - {level}: {score:.4f}")
 
-print(f"\n Nivel prediccion: {predicted_level}")
+print(f"\nPredicted Level: {predicted_level}")
