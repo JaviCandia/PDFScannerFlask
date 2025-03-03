@@ -1,4 +1,3 @@
-
 import os
 import psycopg2
 import re
@@ -9,35 +8,35 @@ from typing import List, Optional
 from sentence_transformers import SentenceTransformer
 from dotenv import load_dotenv
 
-#  Cargar variables de entorno desde `.env`
+# Load environment variables from `.env`
 load_dotenv()
 
-#  Obtener credenciales de la base de datos desde variables de entorno
+# Get database credentials from environment variables
 DB_NAME = os.getenv("DB_NAME")
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_HOST = os.getenv("DB_HOST")
 DB_PORT = os.getenv("DB_PORT")
 
-#  Inicializar FastAPI
+# Initialize FastAPI
 app = FastAPI(
     title="Job Matching API",
     description="Search for job roles using AI embeddings and predict levels.",
     version="1.0.0"
 )
 
-#  Cargar el modelo local
+# Load the local model
 model_path = "models/all-mpnet-base-v2"
 model = SentenceTransformer(model_path)
 
-#  Lista de tecnologías comunes para validación
+# List of common technologies for validation
 TECH_KEYWORDS = [
     "React", "Redux", "Tailwind", "Angular", "Vue", "JavaScript", "Node.js", "TypeScript",
     "Django", "Flask", "Python", "Java", "Spring", "SQL", "PostgreSQL", "MongoDB", "Express",
     "GraphQL", "Kubernetes", "Docker", "AWS", "Azure", "CI/CD", "Microservices"
 ]
 
-#  Conectar a PostgreSQL
+# Connect to PostgreSQL
 def get_db_connection():
     try:
         conn = psycopg2.connect(
@@ -49,10 +48,10 @@ def get_db_connection():
         )
         return conn
     except Exception as e:
-        print(f"Error al conectar con la base de datos: {e}")
+        print(f"Error connecting to the database: {e}")
         return None
 
-#  Modelo de solicitud con ejemplos
+# Request model with examples
 class CandidateProfile(BaseModel):
     description: str = Field(
         ..., 
@@ -87,16 +86,16 @@ async def search_roles(profile: CandidateProfile):
 
     cursor = conn.cursor()
 
-    #  Si el usuario no envía habilidades, extraerlas de la descripción
+    # If the user does not send skills, extract them from the description
     skills_found = profile.mainSkill if profile.mainSkill else extract_skills(profile.description)
 
     print(f"🔍 Detected skills: {skills_found}")
 
-    #  Generar embedding basado en la descripción
+    # Generate embedding based on the description
     embedding_candidate = model.encode(profile.description).tolist()
     embedding_str = "[" + ", ".join(map(str, embedding_candidate)) + "]"
 
-    #  Construir la consulta SQL dinámicamente
+    # Build the SQL query dynamically
     search_filters = " OR ".join(["role_name ILIKE %s OR main_skill ILIKE %s OR secondary_skill ILIKE %s"] * len(skills_found))
     search_values = sum(([f"%{skill}%", f"%{skill}%", f"%{skill}%"] for skill in skills_found), [])
 
@@ -114,17 +113,17 @@ async def search_roles(profile: CandidateProfile):
         cursor.close()
         conn.close()
 
-        #  Formatear los resultados en JSON
+        # Format the results in JSON
         roles = [
             {
                 "role_id": role[0],
                 "role_name": role[1],
                 "project": role[2],
-                "description": role[3][:150] + "...",  # Limitar descripción a 150 caracteres
+                "description": role[3][:150] + "...",  # Limit description to 150 characters
                 "main_skill": role[4],
                 "secondary_skill": role[5],
                 "location": role[6],
-                "similarity": float(role[7])  # Convertir a float para JSON
+                "similarity": float(role[7])  # Convert to float for JSON
             }
             for role in resultados
         ]
@@ -138,10 +137,10 @@ async def search_roles(profile: CandidateProfile):
     except Exception as e:
         return {"error": f"Error executing query: {e}"}
 
-#  Función para extraer habilidades clave del perfil usando expresiones regulares
+# Function to extract key skills from the profile using regular expressions
 def extract_skills(description):
     found_skills = [tech for tech in TECH_KEYWORDS if re.search(rf"\b{tech}\b", description, re.IGNORECASE)]
-    return found_skills if found_skills else ["React"]  # Por defecto, usar React si no se detecta nada
+    return found_skills if found_skills else ["React"]  # By default, use React if nothing is detected
 
 
 # uvicorn app.utils.training.api_searchMainSkill:app --host 0.0.0.0 --port 8000
