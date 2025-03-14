@@ -6,7 +6,7 @@ class RoleMatch(BaseModel):
     role: str = Field(description="Role Name")
     roleId: str = Field(description="RoleId")
     description: str = Field(description="Role description")
-    relevant_skills: List[str] = Field(description="Relevant skills that fit the role. Empty array if there are no relevant skills" , default=[])
+    relevant_skills: List[str] = Field(description="Relevant skills that fit the role. Empty array if there are no relevant skills", default=[])
     start_date: str = Field(description="Role start date")
     score: int = Field(description="Match score")
 
@@ -29,11 +29,12 @@ class FeedbackModel(BaseModel):
     english_level: str = Field(description="English level", default="")
     education: List[str] = Field(default_factory=list)
     years_experience: str = Field(description="Total work experience")
-    summary:str = Field(description="Summary")
+    summary: str = Field(description="Summary")
     companies: List[str] = Field(description="Companies")
     level: str = Field(description="Candidate level")
     skills: List[str] = Field(description="All skills")
-    matches: List[RoleMatch] = Field(description="List of relevant roles matching the candidate skills", default=[])
+    # Comment out matches field since role matching is no longer needed
+    # matches: List[RoleMatch] = Field(description="List of relevant roles matching the candidate skills", default=[])
 
     # [Experimental] General info:
     main_skills: List[str] = Field(description="Main skills", default=[])
@@ -48,7 +49,7 @@ class FeedbackModel(BaseModel):
     roll_on_date: str = Field(description="Roll-On date", default="")
     roll_off_date: str = Field(description="Roll-Off date", default="")
   
-    
+
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -64,7 +65,7 @@ class FeedbackModel(BaseModel):
             "companies": self.companies,
             "level": self.level,
             "skills": self.skills,
-            "matches": [role.to_dict() for role in self.matches],
+            # "matches": [role.to_dict() for role in self.matches],  # commented out
 
             # [Experimental] General info:
             "main_skills": self.main_skills,
