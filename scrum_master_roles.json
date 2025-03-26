@@ -1,0 +1,38 @@
+[
+    {
+        "role_id": "5617566",
+        "role_name": "Scrum Master_ Nearshore ATCM",
+        "description": "Client & Project: We are seeking for a new talent to join the Software Engineering team where you will have the opportunity to collaborate in the project 'Technology Workforce Transformation'. The client is JONES FINANCIAL COMPANIES L.L.L.P., a company specializing in financial services.\n\nResponsibilities: As a Scrum Master, you will be responsible for acting as an enabler for the effective functioning of a software development team using Agile methodologies. Coaches and mentors the Scrum Team(s), removing barriers to successful implementation and enabling a continued focus on the task at hand. Facilitates scrum and agile ceremonies such as sprint planning, daily stand-ups, sprint reviews, and retrospectives. Identifies and reports progress via appropriate metrics. Expected to be an SME, collaborate and manage the team to perform. Responsible for team decisions. Engage with multiple teams and contribute on key decisions. Provide solutions to problems for their immediate team and across multiple teams. Expert proficiency in Scaled Agile Framework (SAFe) is required. Advanced level of proficiency in Scrum is recommended. Atlassian JIRA, Agile Process Coaching, and Agile Project Management with Advanced proficiency are suggested.\n\t\tLead and facilitate Agile ceremonies effectively\n\t\tProvide guidance and coaching to the Scrum Team(s)\n\t\tImplement Agile best practices for continuous improvement\n\t\tCollaborate with cross-functional teams to drive project success\n\t\tAnalyze and optimize Agile processes for efficiency",
+        "main_skill": "Scaled Agile Framework (SAFe)",
+        "project": "JONES FINANCIAL COMPANIES L.L.L.P.",
+        "secondary_skill": "Scaled Agile Framework (SAFe) | Scrum | 1 - Atlassian JIRA (P3 - Advanced) | 2 - Scrum (P3 - Advanced) | 3 - Agile Process Coaching (P3 - Advanced) | 4 - Agile Project Management (P3 - Advanced)",
+        "similarity_score": 0.9512
+    },
+    {
+        "role_id": "5619985",
+        "role_name": "ACC-1134 - SPS - Scrum Master",
+        "description": "Acts as an enabler for the effective functioning of a software development team using Agile methodologies. Coaches and mentors the Scrum Team(s), removing barriers to successful implementation and enabling a continued focus on the task at hand. Facilitates scrum and agile ceremonies such as sprint planning, daily stand-ups, sprint reviews, and retrospectives. Identifies and reports progress via appropriate metrics.",
+        "main_skill": "Scrum",
+        "project": "POWER CORPORATION OF CANADA",
+        "secondary_skill": "Scrum | Agile Project Management | 1 - Agile Project Management (P3 - Advanced) | 2 - Agile Methods (ADM for Distributed Agile Development) (P3 - Advanced) | 3 - Agile Process Coaching (P3 - Advanced)",
+        "similarity_score": 0.9692
+    },
+    {
+        "role_id": "5626648",
+        "role_name": "ACC-1117 PLAN/Scrum Master",
+        "description": "Acts as an enabler for the effective functioning of a software development team using Agile methodologies. Coaches and mentors the Scrum Team(s), removing barriers to successful implementation and enabling a continued focus on the task at hand. Facilitates scrum and agile ceremonies such as sprint planning, daily stand-ups, sprint reviews, and retrospectives. Identifies and reports progress via appropriate metrics.",
+        "main_skill": "Agile Project Management",
+        "project": "POWER CORPORATION OF CANADA",
+        "secondary_skill": "Agile Project Management | Scrum | 1 - Scrum (P3 - Advanced) | 2 - Agile Methods (ADM for Distributed Agile Development) (P3 - Advanced) | 3 - Agile Process Coaching (P3 - Advanced)",
+        "similarity_score": 1.0294
+    },
+    {
+        "role_id": "5654761",
+        "role_name": "AMS Senior Technical Lead",
+        "description": "Advanced Scrum Master - SAFe\n\n",
+        "main_skill": "Scrum",
+        "project": "FEDEX CORPORATION",
+        "secondary_skill": "Scrum |  |",
+        "similarity_score": 1.066
+    }
+]
