@@ -1,12 +1,11 @@
 import os
 import redis
-from flask import request, jsonify, send_file
-from werkzeug.utils import secure_filename
-import json
+from flask import request, jsonify
 from dotenv import load_dotenv
 from app.utils.pdf_processing import create_document
 from app.utils.cv_processing import cache_or_generate_response
 from app.utils.role_processing import process_demand_file
+from app.utils.semantic_search_roles_processing import search_roles_by_embedding  # Se importa la nueva función
 
 # Load environment variables from .env file
 load_dotenv()
@@ -19,20 +18,6 @@ redis_client = redis.StrictRedis(
 )
 
 def create_routes(app):
-    # The single-cv endpoint is commented out as it is not used.
-    # @app.route("/single-cv", methods=["POST"])
-    # def upload_single_cv():
-    #     if "cv" not in request.files:
-    #         return jsonify({"error": "No PDF uploaded"}), 400
-    #
-    #     if not os.path.exists('demand_output.json'):
-    #         return jsonify({"error": "Roles data not available. Please generate the roles data first."}), 400
-    #
-    #     pdf_file = request.files["cv"]
-    #     documents = create_document(pdf_file)[0]
-    #     response = cache_or_generate_response(documents, redis_client)
-    #     return jsonify(response)
-
     @app.route("/multiple-cvs", methods=["POST"])
     def upload_multiple_cvs():
         if "cvs" not in request.files:
@@ -57,3 +42,17 @@ def create_routes(app):
         file = request.files['file']
         status = process_demand_file(file)
         return jsonify(status)
+
+    @app.route('/role-semantic-search', methods=['POST'])
+    def role_semantic_search():
+        data = request.get_json()
+        if not data or "candidate_profile" not in data:
+            return jsonify({"error": "Missing 'candidate_profile' in request"}), 400
+
+        candidate_profile = data["candidate_profile"]
+        use_keybert = data.get("use_keybert", False)
+
+        roles = search_roles_by_embedding(candidate_profile, use_keybert)
+
+        status_msg = f"200, {len(roles)} roles found" if roles else "200, no roles found"
+        return jsonify({"status": status_msg, "roles": roles})
