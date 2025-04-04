@@ -2,7 +2,7 @@ import os
 import redis
 from flask import request, jsonify
 from dotenv import load_dotenv
-from app.utils.pdf_processing import create_document
+from app.utils.document_processing import create_document
 from app.utils.cv_processing import cache_or_generate_response
 from app.utils.role_processing import process_demand_file
 from app.utils.semantic_search_roles_processing import search_roles_by_embedding  # Se importa la nueva función

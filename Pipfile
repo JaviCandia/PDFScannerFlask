@@ -22,6 +22,7 @@ pandas = "*"
 pyxlsb = "*"
 spacy = "*"
 keybert = "*"
+python-pptx = "*"
 
 [dev-packages]
 
