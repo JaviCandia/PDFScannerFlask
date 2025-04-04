@@ -20,6 +20,8 @@ pinecone-client = "*"
 azure-search-documents = "*"
 pandas = "*"
 pyxlsb = "*"
+spacy = "*"
+keybert = "*"
 python-pptx = "*"
 
 [dev-packages]
